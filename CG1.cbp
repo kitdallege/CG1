@@ -41,8 +41,11 @@
 			<Add library="/usr/lib/x86_64-linux-gnu/libxml2.so" />
 			<Add directory="/usr/local/lib" />
 		</Linker>
-		<Unit filename="src/Engine.h" />
-		<Unit filename="src/Game.h" />
+		<Unit filename="src/cg1_game.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/cg1_game.h" />
+		<Unit filename="src/cg1_stdinc.h" />
 		<Unit filename="src/main.c">
 			<Option compilerVar="CC" />
 		</Unit>

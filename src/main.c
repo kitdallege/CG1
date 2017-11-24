@@ -27,8 +27,7 @@
 #include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_image.h>
 
-#include "Engine.h"
-#include "Game.h"
+#include "cg1_game.h"
 
 #define fatal_error(str)  { fputs(str, stderr); goto errquit; }
 #define fatal_error2(str) { fputs(str, stderr);  return NULL; }
@@ -202,7 +201,7 @@ Uint32 timer_func(Uint32 interval, void *param)
     return(interval);
 }
 
-int main(int argc, char *argv[])
+int mainOld(int argc, char *argv[])
 {
     tmx_map *map = NULL;
     SDL_Window *win;
@@ -340,5 +339,23 @@ int main(int argc, char *argv[])
 
 errquit:
     SDL_Quit();
+    return -1;
+}
+
+
+int main(int argc, char *argv[])
+{
+    int initialized;
+    game_t *game = malloc(sizeof *game);
+    game->title = "C-Game #1";
+    if (!(initialized = Game_Init(game))){
+        goto errorquit;
+    }
+    Game_Run(game);
+    Game_Free(game);
+    return 0;
+
+errorquit:
+    Game_Free(game);
     return -1;
 }
