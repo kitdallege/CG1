@@ -345,17 +345,16 @@ errquit:
 
 int main(int argc, char *argv[])
 {
-    int initialized;
-    game_t *game = malloc(sizeof *game);
-    game->title = "C-Game #1";
-    if (!(initialized = Game_Init(game))){
+    game_t *game;
+
+    if (!(game = Game_Init())){
         goto errorquit;
     }
     Game_Run(game);
-    Game_Free(game);
+    Game_Quit(game);
     return 0;
 
 errorquit:
-    Game_Free(game);
+    Game_Quit(game);
     return -1;
 }

@@ -11,9 +11,10 @@ Viewport position, player, maps/levels, NPC's.
 */
 typedef enum
 {
+    GST_INITIALIZED,
     GST_SPLASH,
     GST_MAIN_MENU,
-    GST_PLAY
+    GST_QUIT
 } game_state_t;
 
 typedef struct game_s
@@ -31,7 +32,7 @@ struct {
 } Engine;
 
 
-boolean  Game_Init(game_t *game);
+game_t *  Game_Init();
 void Game_Run(game_t *game);
-void Game_Free(game_t *game);
+void Game_Quit(game_t *game);
 #endif // GAME_H_INCLUDED
