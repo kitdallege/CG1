@@ -12,6 +12,7 @@
 #include "cg1_game.h"
 
 // Constants
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
 #define DISPLAY_H 480
 #define DISPLAY_W 640
 #define GAME_TITLE "C-Game #1"
@@ -33,7 +34,7 @@ game_t * Game_Init()
     game_t *game = malloc(sizeof *game);
     if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_VIDEO) != 0)
     {
-        fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize SDL: %s", SDL_GetError());
         return NULL;
     }
     IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF);
@@ -42,7 +43,7 @@ game_t * Game_Init()
                  DISPLAY_W * 2, DISPLAY_H * 2, SDL_WINDOW_RESIZABLE);
     if (!window)
     {
-        fprintf(stderr, "Unable to initialize Window: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize Window: %s", SDL_GetError());
         return NULL;
     }
     renderer = SDL_CreateRenderer(window, -1,
@@ -50,7 +51,7 @@ game_t * Game_Init()
                                   SDL_RENDERER_PRESENTVSYNC);
     if (!renderer)
     {
-        fprintf(stderr, "Unable to initialize Renderer: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize Renderer: %s", SDL_GetError());
         return NULL;
     }
     SDL_RenderSetLogicalSize(renderer, DISPLAY_W, DISPLAY_H);
@@ -71,20 +72,50 @@ void Game_Run(game_t *game)
     Main_Menu_Free();
     Splash_Free();
 }
+/**
+TODO: Need to decouple the run loop from the framerate.
+vsync (whilst great) isn't a means to provide a steady FPS.
 
+ https://gafferongames.com/post/fix_your_timestep/
+*/
 void Game_Mainloop(void)
 {
-    while (game_state != GST_QUIT)
-    {
-        SDL_RenderClear(renderer);
-        uint32_t ticks = SDL_GetTicks();
-        Game_Ticker(ticks);     // handler time based logic.
-        Game_ProcessEvents();   // handle inputs
+    // Currently using a Fixed-time-step..
+    // TODO: Go to variable.
+    // I can't see enforcing some strict FPS across a ton of devices
+    // so its just easier to design around inconsistent step-times.
+    // I Need to get this right before i build a ton of stuff atop of it.
+    /*
+      Or. one could code a fixed-time-step such that your passing in a
+      delta to the update anyway (in this case its a constant) but if
+      ya wanted to switch to a variable-time-step you could without needing
+      to change any of the *game code*.
+    */
+    unsigned short MAX_FRAMES_PER_SEC = 60;
+    float seconds_per_frame = 1.0f / (float)MAX_FRAMES_PER_SEC;
+    uint64_t freq = SDL_GetPerformanceFrequency();
+    uint64_t logic_ticks  = SDL_GetPerformanceCounter();
+    uint64_t time_per_tick = (uint64_t) (seconds_per_frame * freq);
+    int loops;
+    float interpolation;
+    do {
+        loops = 0;
+        while (SDL_GetPerformanceCounter() >= logic_ticks && loops < MAX_FRAMES_PER_SEC)
+        {
+            Game_ProcessEvents();
+            Game_Ticker(SDL_GetTicks());
+            logic_ticks += time_per_tick;
+            loops++;
+            SDL_Log("step logic.");
+        }
+        SDL_Log("(%lu - %lu) / %lu", SDL_GetPerformanceCounter(), logic_ticks, time_per_tick);
+        interpolation = (SDL_GetPerformanceCounter() + time_per_tick - logic_ticks) / time_per_tick;
+        SDL_Log("interpolation: %f", interpolation);
         // TODO: update sounds
         SDL_RenderClear(renderer);
-        Game_Draw();                    // draw
-        SDL_RenderPresent(renderer);    // display
-    }
+        Game_Draw();
+        SDL_RenderPresent(renderer);
+    } while (game_state != GST_QUIT);
 }
 
 //TODO: Turn this into a state-machine with transition functions.
@@ -93,7 +124,7 @@ void Game_Mainloop(void)
 void Game_Ticker (uint32_t ticks)
 {
     // update based on time thats passed
-    if (Splash_Ticker(ticks) == false)
+    if (game_state == GST_SPLASH && Splash_Ticker(ticks) == false)
     {
         game_state = GST_MAIN_MENU;
     }

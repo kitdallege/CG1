@@ -10,11 +10,12 @@ static SDL_Texture *background = NULL;
 
 boolean Main_Menu_Init(SDL_Renderer *renderer)
 {
-//    SDL_Surface *surface;
-//    surface = IMG_Load("/home/code/c-code/CG1/assets/backgrounds/sunsetintheswamp.png");
-//    background = SDL_CreateTextureFromSurface(renderer, surface);
-    background = IMG_LoadTexture(renderer, "/home/code/c-code/CG1/assets/backgrounds/sunsetintheswamp.png");
-
+    background = IMG_LoadTexture(renderer, BACKGROUND);
+    if (background == NULL)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_ASSERT, "Failed to LoadTexture: %s", BACKGROUND);
+        return false;
+    }
     return true;
 }
 

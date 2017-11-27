@@ -21,19 +21,19 @@ boolean Splash_Init(SDL_Renderer *renderer)
     SDL_Surface *surface = NULL;
     surface = SDL_CreateRGBSurface(0, 640, 480, 32, 0, 0, 0, 0);
     if (surface == NULL){
-        fprintf(stderr, "Error creating surface: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Error creating surface: %s\n", SDL_GetError());
         return false;
     }
     SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0xcc, 0xcc, 0xcc ));
     splash->texture = SDL_CreateTextureFromSurface(renderer, surface);
     if (SDL_SetTextureBlendMode(splash->texture, SDL_BLENDMODE_BLEND) != 0)
     {
-        fprintf(stderr, "Error setting texture blend-mode: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Error setting texture blend-mode: %s\n", SDL_GetError());
         return false;
     }
     if (SDL_SetTextureAlphaMod(splash->texture, splash_alpha) != 0)
     {
-        fprintf(stderr, "Error setting texture alpha-mode: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Error setting texture alpha-mode: %s\n", SDL_GetError());
         return false;
     }
     SDL_FreeSurface(surface);
@@ -53,7 +53,7 @@ boolean Splash_Ticker(uint32_t ticks)
             splash_animation_last_update = ticks;
             splash_state = SPLASH_FADEIN;
         } else {
-            SDL_Delay(SPLASH_HIDDEN_DELAY - elapsed);
+            //SDL_Delay(SPLASH_HIDDEN_DELAY - elapsed);
         }
         break;
     case SPLASH_FADEIN:
