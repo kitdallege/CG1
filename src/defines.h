@@ -8,8 +8,8 @@
 #define GOAL_FPS 60
 
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
-#define DISPLAY_H 480
-#define DISPLAY_W 640
+#define DISPLAY_H 640
+#define DISPLAY_W 960
 #define GAME_TITLE "C-Game #1"
 
 #endif // DEFINES_H_INCLUDED

@@ -59,7 +59,7 @@ boolean Map_Responder (SDL_Event *event)
 
 void Map_Render(SDL_Renderer *renderer)
 {
-    SDL_RenderCopy(renderer, map_bmp, NULL, &map_rect);
+    SDL_RenderCopyEx(renderer, map_bmp, &map_rect, NULL, 0, NULL, SDL_FLIP_NONE);
 }
 
 // Utils to draw map
@@ -93,7 +93,7 @@ void draw_objects(tmx_object_group *objgr)
     SDL_Rect rect;
     set_color(objgr->color);
     tmx_object *head = objgr->head;
-    // FIXME line thickness
+    // TODO: FIXME line thickness
     while (head) {
         if (head->visible) {
             if (head->obj_type == OT_SQUARE) {
@@ -107,7 +107,8 @@ void draw_objects(tmx_object_group *objgr)
             } else if (head->obj_type == OT_POLYLINE) {
                 draw_polyline(head->content.shape->points, head->x, head->y, head->content.shape->points_len);
             } else if (head->obj_type == OT_ELLIPSE) {
-                // FIXME: no function in SDL2
+                // TODO: FIXME: no function in SDL2 for ellipse
+                SDL_Log("No Draw for OT_ELLIPSE");
             }
         }
         head = head->next;
@@ -121,17 +122,20 @@ unsigned int gid_clear_flags(unsigned int gid)
 
 void draw_layer(tmx_map *map, tmx_layer *layer)
 {
+
     unsigned long i, j;
-    unsigned int gid;
-    //float op;
+    unsigned int rawGid, gid;
+    float op;
     tmx_tileset *ts;
     tmx_image *im;
     SDL_Rect srcrect, dstrect;
     SDL_Texture* tileset;
-    //op = layer->opacity;
+    op = layer->opacity;
     for (i=0; i<map->height; i++) {
         for (j=0; j<map->width; j++) {
-            gid = gid_clear_flags(layer->content.gids[(i*map->width)+j]);
+            SDL_RendererFlip flip = SDL_FLIP_NONE;
+            rawGid = layer->content.gids[(i*map->width)+j];
+            gid = gid_clear_flags(rawGid);
             if (map->tiles[gid] != NULL) {
                 ts = map->tiles[gid]->tileset;
                 im = map->tiles[gid]->image;
@@ -141,13 +145,34 @@ void draw_layer(tmx_map *map, tmx_layer *layer)
                 srcrect.h = dstrect.h = ts->tile_height;
                 dstrect.x = j*ts->tile_width;
                 dstrect.y = i*ts->tile_height;
-                // TODO Opacity and Flips
+                // TODO: Better job on Opacity and Flips
                 if (im) {
                     tileset = (SDL_Texture*)im->resource_image;
                 } else {
                     tileset = (SDL_Texture*)ts->image->resource_image;
                 }
-                SDL_RenderCopy(gRenderer, tileset, &srcrect, &dstrect);
+                if (op < 1.0f)
+                {
+                    SDL_Log("opacity: %.2f", op);
+                }
+                // diagonal -> horizontal -> vertical
+                if (rawGid & TMX_FLIPPED_DIAGONALLY)
+                {
+                    SDL_Log("TMX_FLIPPED_DIAGONALLY");
+                    flip = SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL;
+
+                }
+                if (rawGid & TMX_FLIPPED_HORIZONTALLY)
+                {
+                    SDL_Log("TMX_FLIPPED_HORIZONTALLY");
+                    flip = SDL_FLIP_HORIZONTAL;
+                }
+                if (rawGid & TMX_FLIPPED_VERTICALLY)
+                {
+                    SDL_Log("TMX_FLIPPED_VERTICALLY");
+                    flip = SDL_FLIP_VERTICAL;
+                }
+                SDL_RenderCopyEx(gRenderer, tileset, &srcrect, &dstrect, 0.0, NULL, flip);
             }
         }
     }
@@ -159,7 +184,6 @@ void draw_image_layer(tmx_image *img)
 
     dim.x = dim.y = 0;
     SDL_QueryTexture((SDL_Texture*)img->resource_image, NULL, NULL, &(dim.w), &(dim.h));
-
     SDL_RenderCopy(gRenderer, (SDL_Texture*)img->resource_image, NULL, &dim);
 }
 

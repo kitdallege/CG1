@@ -30,7 +30,7 @@ game_t * Game_Init()
     IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF);
     window = SDL_CreateWindow(
                  GAME_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                 DISPLAY_W * 2, DISPLAY_H * 2, SDL_WINDOW_RESIZABLE);
+                 DISPLAY_W, DISPLAY_H, SDL_WINDOW_RESIZABLE);
     if (!window)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize Window: %s", SDL_GetError());
@@ -44,8 +44,8 @@ game_t * Game_Init()
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize Renderer: %s", SDL_GetError());
         return NULL;
     }
-    SDL_RenderSetLogicalSize(renderer, DISPLAY_W, DISPLAY_H);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+    SDL_RenderSetLogicalSize(renderer, DISPLAY_W, DISPLAY_H);
     game_state = GST_INITIALIZED;
     return game;
 }

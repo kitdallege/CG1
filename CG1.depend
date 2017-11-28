@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1511543833 source:/home/code/c-code/CG1/src/main.c
+1511891522 source:/home/code/c-code/CG1/src/main.c
 	<stdio.h>
 	<tmx.h>
 	<SDL2/SDL.h>
@@ -353,20 +353,15 @@
 
 1511414673 /home/code/c-code/CG1/src/Game.h
 
-1511848262 source:/home/code/c-code/CG1/src/cg1_game.c
-	<stdio.h>
+1511891126 source:/home/code/c-code/CG1/src/cg1_game.c
 	<tmx.h>
-	<SDL2/SDL.h>
-	<SDL2/SDL_events.h>
-	<SDL2/SDL_keyboard.h>
-	<SDL2/SDL_keycode.h>
-	<SDL2/SDL_image.h>
 	"cg1_splash.h"
 	"cg1_main_menu.h"
+	"cg1_map.h"
 	"cg1_mouse.h"
 	"cg1_game.h"
 
-1511886795 /home/code/c-code/CG1/src/cg1_game.h
+1511890728 /home/code/c-code/CG1/src/cg1_game.h
 	<SDL2/SDL.h>
 	"cg1_stdinc.h"
 
@@ -379,32 +374,29 @@
 	<SDL2/SDL_image.h>
 	"defines.h"
 
-1511848011 source:/home/code/c-code/CG1/src/cg1_splash.c
-	"SDL2/SDL.h"
+1511886901 source:/home/code/c-code/CG1/src/cg1_splash.c
 	"cg1_splash.h"
 
 1511816530 /home/code/c-code/CG1/src/cg1_splash.h
 	<SDL2/SDL.h>
 	"cg1_stdinc.h"
 
-1511738613 source:/home/code/c-code/CG1/src/cg1_main_menu.c
-	<stdio.h>
-	<SDL2/SDL.h>
-	<SDL2/SDL_image.h>
+1511886918 source:/home/code/c-code/CG1/src/cg1_main_menu.c
 	"cg1_main_menu.h"
 
-1511582709 /home/code/c-code/CG1/src/cg1_main_menu.h
-	"SDL2/SDL.h"
+1511886926 /home/code/c-code/CG1/src/cg1_main_menu.h
 	"cg1_stdinc.h"
 
-1511738683 source:/home/code/c-code/CG1/src/cg1_mouse.c
-	<SDL2/SDL.h>
-	<SDL2/SDL_image.h>
+1511886890 source:/home/code/c-code/CG1/src/cg1_mouse.c
 	"cg1_mouse.h"
 
 1511584104 /home/code/c-code/CG1/src/cg1_mouse.h
 	"SDL2/SDL.h"
 	"cg1_stdinc.h"
 
-1511850350 /home/code/c-code/CG1/src/defines.h
+1511890436 /home/code/c-code/CG1/src/defines.h
+
+1511890260 /home/code/c-code/CG1/src/cg1_map.h
+	"cg1_stdinc.h"
+	<tmx.h>
 
