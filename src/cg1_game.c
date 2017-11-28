@@ -26,8 +26,8 @@ static game_state_t     game_state;
 void Game_Mainloop();
 void Game_ProcessEvents (void);
 boolean Game_Responder (SDL_Event *ev);
-void Game_Ticker (uint32_t ticks);
-void Game_Draw (void);
+//void Game_Ticker (uint32_t ticks);
+void Game_Draw (float interpolation);
 
 game_t * Game_Init()
 {
@@ -80,54 +80,50 @@ vsync (whilst great) isn't a means to provide a steady FPS.
 */
 void Game_Mainloop(void)
 {
-    // Currently using a Fixed-time-step..
-    // TODO: Go to variable.
-    // I can't see enforcing some strict FPS across a ton of devices
-    // so its just easier to design around inconsistent step-times.
-    // I Need to get this right before i build a ton of stuff atop of it.
-    /*
-      Or. one could code a fixed-time-step such that your passing in a
-      delta to the update anyway (in this case its a constant) but if
-      ya wanted to switch to a variable-time-step you could without needing
-      to change any of the *game code*.
-    */
+    const short  MAX_UPDATES_PER_FRAME = 10;
     unsigned short MAX_FRAMES_PER_SEC = 60;
-    float seconds_per_frame = 1.0f / (float)MAX_FRAMES_PER_SEC;
-    uint64_t freq = SDL_GetPerformanceFrequency();
-    uint64_t logic_ticks  = SDL_GetPerformanceCounter();
-    uint64_t time_per_tick = (uint64_t) (seconds_per_frame * freq);
     int loops;
     float interpolation;
+    float seconds_per_frame = 1.0f / (float)MAX_FRAMES_PER_SEC;
+    const uint64_t freq = SDL_GetPerformanceFrequency();
+    uint64_t time_per_tick = (uint64_t) (seconds_per_frame * freq);
+    uint64_t now_ticks;
+    uint64_t logic_ticks  = SDL_GetPerformanceCounter();
     do {
+//        SDL_Log("============START FRAME================");
         loops = 0;
-        while (SDL_GetPerformanceCounter() >= logic_ticks && loops < MAX_FRAMES_PER_SEC)
+        now_ticks = SDL_GetPerformanceCounter();
+        while (now_ticks >= logic_ticks && loops < MAX_UPDATES_PER_FRAME)
         {
             Game_ProcessEvents();
-            Game_Ticker(SDL_GetTicks());
+            double delta = ((now_ticks - logic_ticks) * 1000.0f) / (double)freq;
+            Game_Ticker(seconds_per_frame);
+//            SDL_Log("update: %.2f", delta);
             logic_ticks += time_per_tick;
             loops++;
-            SDL_Log("step logic.");
         }
-        SDL_Log("(%lu - %lu) / %lu", SDL_GetPerformanceCounter(), logic_ticks, time_per_tick);
-        interpolation = (SDL_GetPerformanceCounter() + time_per_tick - logic_ticks) / time_per_tick;
-        SDL_Log("interpolation: %f", interpolation);
+        interpolation = ((now_ticks + time_per_tick - logic_ticks) / (float)time_per_tick);
         // TODO: update sounds
         SDL_RenderClear(renderer);
-        Game_Draw();
+        Game_Draw(interpolation);
         SDL_RenderPresent(renderer);
+//        SDL_Log("============END FRAME================");
     } while (game_state != GST_QUIT);
+//    SDL_Log("time_per_tick: %.2f", time_per_tick / (float)freq);
+//    SDL_Log("m-seconds_per_frame: %.2f", seconds_per_frame * 1000);
 }
 
 //TODO: Turn this into a state-machine with transition functions.
 //Need ability to stack FSM's, and for an FSM to be able to push onto that
 // stack.
-void Game_Ticker (uint32_t ticks)
+void Game_Ticker (double delta)
 {
     // update based on time thats passed
-    if (game_state == GST_SPLASH && Splash_Ticker(ticks) == false)
+    if (game_state == GST_SPLASH && Splash_Ticker(delta) == false)
     {
         game_state = GST_MAIN_MENU;
     }
+    SDL_Delay(5);
 }
 
 void Game_ProcessEvents (void)
@@ -171,9 +167,9 @@ boolean Game_Responder (SDL_Event *event)
     return true;
 }
 
-void Game_Draw (void)
+void Game_Draw (float interpolation)
 {
-
+    SDL_Log("interpolation: %.2f", interpolation);
     switch (game_state)
     {
         case GST_SPLASH:

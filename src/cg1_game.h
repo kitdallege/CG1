@@ -33,7 +33,7 @@ struct {
 
 
 game_t *  Game_Init();
-void Game_Ticker (uint32_t ticks); // Update (should take a delta).
+void Game_Ticker (double delta); // Update (should take a delta).
 void Game_Run(game_t *game);
 void Game_Quit(game_t *game);
 #endif // GAME_H_INCLUDED

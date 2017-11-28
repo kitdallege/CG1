@@ -5,15 +5,18 @@
 #define SPLASH_HIDDEN_DELAY 3000
 #define SPLASH_VISIBLE_LENGTH 3000
 #define FADEIN_STEP 4
-#define FADEIN_STEP_DELAY 20
+#define FADEIN_STEP_DELAY 15
 #define FADEOUT_STEP 4
-#define FADEOUT_STEP_DELAY 20
+#define FADEOUT_STEP_DELAY 15
 
 static cg1_splash_t *splash = NULL;
 
 static cg1_splash_state splash_state = SPLASH_HIDDEN;
 static uint32_t splash_alpha = SPLASH_ALPHA_MIN;
 static uint32_t splash_animation_last_update = 0;
+
+static uint32_t splash_start;
+static double splash_delta_sum;
 
 boolean Splash_Init(SDL_Renderer *renderer)
 {
@@ -37,17 +40,21 @@ boolean Splash_Init(SDL_Renderer *renderer)
         return false;
     }
     SDL_FreeSurface(surface);
+    splash_start = 0;
+    splash_delta_sum = 0;
     return true;
 }
 
 
-boolean Splash_Ticker(uint32_t ticks)
+boolean Splash_Ticker(double delta)
 {
+    uint32_t ticks = SDL_GetTicks();
+    if (splash_start == 0) {splash_start = ticks;}
+    splash_delta_sum += delta;
     uint32_t elapsed = ticks - splash_animation_last_update;
     switch (splash_state)
     {
     case SPLASH_HIDDEN:
-
         if (elapsed > SPLASH_HIDDEN_DELAY)
         {
             splash_animation_last_update = ticks;
@@ -100,6 +107,8 @@ boolean Splash_Ticker(uint32_t ticks)
         }
         break;
     case SPLASH_DONE:
+        SDL_Log("ticks: %u", SDL_GetTicks() - splash_start);
+        SDL_Log("perf: %.2f", splash_delta_sum);
         return false;
         break;
     }

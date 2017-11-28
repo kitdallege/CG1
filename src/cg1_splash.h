@@ -27,7 +27,7 @@ typedef enum
 boolean Splash_Init(SDL_Renderer *renderer);
 void Splash_Free(void);
 
-boolean Splash_Ticker(uint32_t ticks);
+boolean Splash_Ticker(double delta);
 boolean Splash_Reponder(SDL_Event *event);
 void Splash_Render(SDL_Renderer *renderer);
 #endif // CG1_SPLASH_H_INCLUDED
