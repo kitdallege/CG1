@@ -1,7 +1,3 @@
-
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-
 #include "cg1_mouse.h"
 
 #define CURSOR_TEXTURE "/home/code/c-code/CG1/assets/cursor/cursor_final.png"

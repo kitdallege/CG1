@@ -1,5 +1,6 @@
-#include "SDL2/SDL.h"
+
 #include "cg1_splash.h"
+
 #define SPLASH_ALPHA_MIN 125
 #define SPLASH_ALPHA_MAX 255
 #define SPLASH_HIDDEN_DELAY 3000

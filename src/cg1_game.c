@@ -1,21 +1,11 @@
-#include <stdio.h>
 #include <tmx.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_keyboard.h>
-#include <SDL2/SDL_keycode.h>
-#include <SDL2/SDL_image.h>
 
 #include "cg1_splash.h"
 #include "cg1_main_menu.h"
+#include "cg1_map.h"
 #include "cg1_mouse.h"
 #include "cg1_game.h"
 
-// Constants
-#define MIN(x, y) (((x) < (y)) ? (x) : (y))
-#define DISPLAY_H 480
-#define DISPLAY_W 640
-#define GAME_TITLE "C-Game #1"
 // Globals
 static SDL_Renderer    *renderer = NULL;
 static SDL_Window      *window = NULL;
@@ -66,21 +56,15 @@ void Game_Run(game_t *game)
     Splash_Init(renderer);
     Main_Menu_Init(renderer);
     Mouse_Init(renderer);
+    Map_Init(renderer);
     game_state = GST_SPLASH;
     Game_Mainloop();
+    Map_Free();
     Mouse_Free();
     Main_Menu_Free();
     Splash_Free();
 }
-/**
-TODO: Need to decouple the run loop from the framerate.
-vsync (whilst great) isn't a means to provide a steady FPS.
 
- https://gafferongames.com/post/fix_your_timestep/
-*/
-
-
-const short  MAX_UPDATES_PER_FRAME = 10;
 
 void Game_Mainloop(void)
 {
@@ -91,26 +75,21 @@ void Game_Mainloop(void)
     const Uint64 count_pms = count_ps / 1000;
     double interpolation;
     do {
-//        SDL_Log("============START FRAME================");
         curr_count = SDL_GetPerformanceCounter();
         lag += curr_count - prev_count;
         prev_count = curr_count;
         Game_ProcessEvents();
         while (lag >= MS_PER_UPDATE * count_pms)
         {
-//            SDL_Log("tick!");
             Game_Ticker(MS_PER_UPDATE);
             lag -= MS_PER_UPDATE*count_pms;
         }
-//        SDL_Log("lag: %lu", lag);
-//        SDL_Log("lag ms: %.2f", (lag * 1000.0f) / (double)count_ps);
-//        SDL_Log("count_pms: %lu", count_pms);
-        interpolation = (double)lag / (1000.0f * (double)count_pms);
         // TODO: update sounds
         SDL_RenderClear(renderer);
+        // TODO: Check out `interpolation` it seems off.
+        interpolation = (double)lag / (1000.0f * (double)count_pms);
         Game_Draw(interpolation);
         SDL_RenderPresent(renderer);
-//        SDL_Log("============END FRAME================");
     } while (game_state != GST_QUIT);
 }
 
@@ -122,7 +101,7 @@ void Game_Ticker (double delta)
     // update based on time thats passed
     if (game_state == GST_SPLASH && Splash_Ticker(delta) == false)
     {
-        game_state = GST_MAIN_MENU;
+        game_state = GST_MAP_DEMO;
     }
     SDL_Delay(5);
 }
@@ -161,6 +140,8 @@ boolean Game_Responder (SDL_Event *event)
         case GST_MAIN_MENU:
             Main_Menu_Responder(event);
             break;
+        case GST_MAP_DEMO:
+            Map_Responder(event);
         default:
             break;
     }
@@ -170,7 +151,7 @@ boolean Game_Responder (SDL_Event *event)
 
 void Game_Draw (float interpolation)
 {
-    SDL_Log("interpolation: %.2f", interpolation);
+//    SDL_Log("interpolation: %.2f", interpolation);
     switch (game_state)
     {
         case GST_SPLASH:
@@ -179,6 +160,8 @@ void Game_Draw (float interpolation)
         case GST_MAIN_MENU:
             Main_Menu_Render(renderer);
             break;
+        case GST_MAP_DEMO:
+            Map_Render(renderer);
         default:
             break;
     }

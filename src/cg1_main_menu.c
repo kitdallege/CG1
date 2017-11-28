@@ -1,7 +1,4 @@
 
-#include <stdio.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 #include "cg1_main_menu.h"
 
 #define BACKGROUND "/home/code/c-code/CG1/assets/backgrounds/sunsetintheswamp.png"

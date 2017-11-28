@@ -366,11 +366,18 @@
 	"cg1_mouse.h"
 	"cg1_game.h"
 
-1511848343 /home/code/c-code/CG1/src/cg1_game.h
+1511886795 /home/code/c-code/CG1/src/cg1_game.h
 	<SDL2/SDL.h>
 	"cg1_stdinc.h"
 
-1511553515 /home/code/c-code/CG1/src/cg1_stdinc.h
+1511886816 /home/code/c-code/CG1/src/cg1_stdinc.h
+	<stdio.h>
+	<SDL2/SDL.h>
+	<SDL2/SDL_events.h>
+	<SDL2/SDL_keyboard.h>
+	<SDL2/SDL_keycode.h>
+	<SDL2/SDL_image.h>
+	"defines.h"
 
 1511848011 source:/home/code/c-code/CG1/src/cg1_splash.c
 	"SDL2/SDL.h"
@@ -398,4 +405,6 @@
 1511584104 /home/code/c-code/CG1/src/cg1_mouse.h
 	"SDL2/SDL.h"
 	"cg1_stdinc.h"
+
+1511850350 /home/code/c-code/CG1/src/defines.h
 

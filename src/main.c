@@ -35,6 +35,7 @@
 #define DISPLAY_H 480
 #define DISPLAY_W 640
 #define TILE_MAP_FILEPATH "/home/code/c-code/CG1/assets/maps/orthogonal-outside.tmx"
+/*
 static SDL_Renderer *ren = NULL;
 
 void set_color(int color)
@@ -74,7 +75,7 @@ void draw_objects(tmx_object_group *objgr)
     SDL_Rect rect;
     set_color(objgr->color);
     tmx_object *head = objgr->head;
-    /* FIXME line thickness */
+    // FIXME line thickness
     while (head) {
         if (head->visible) {
             if (head->obj_type == OT_SQUARE) {
@@ -88,7 +89,7 @@ void draw_objects(tmx_object_group *objgr)
             } else if (head->obj_type == OT_POLYLINE) {
                 draw_polyline(head->content.shape->points, head->x, head->y, head->content.shape->points_len);
             } else if (head->obj_type == OT_ELLIPSE) {
-                /* FIXME: no function in SDL2 */
+                // FIXME: no function in SDL2
             }
         }
         head = head->next;
@@ -122,7 +123,7 @@ void draw_layer(tmx_map *map, tmx_layer *layer)
                 srcrect.h = dstrect.h = ts->tile_height;
                 dstrect.x = j*ts->tile_width;
                 dstrect.y = i*ts->tile_height;
-                /* TODO Opacity and Flips */
+                // TODO Opacity and Flips
                 if (im) {
                     tileset = (SDL_Texture*)im->resource_image;
                 } else {
@@ -167,7 +168,7 @@ SDL_Texture* render_map(tmx_map *map)
     SDL_Texture *res;
     int w, h;
 
-    w = map->width  * map->tile_width;  /* Bitmap's width and height */
+    w = map->width  * map->tile_width;  // Bitmap's width and height
     h = map->height * map->tile_height;
 
     if (!(res = SDL_CreateTexture(ren, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, w, h))) {
@@ -341,7 +342,7 @@ errquit:
     SDL_Quit();
     return -1;
 }
-
+*/
 
 int main(int argc, char *argv[])
 {

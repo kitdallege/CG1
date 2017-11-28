@@ -1,7 +1,6 @@
 #ifndef CG1_MAIN_MENU_H_INCLUDED
 #define CG1_MAIN_MENU_H_INCLUDED
 
-#include "SDL2/SDL.h"
 #include "cg1_stdinc.h"
 
 boolean Main_Menu_Init(SDL_Renderer *renderer);

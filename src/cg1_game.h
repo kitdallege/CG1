@@ -4,15 +4,8 @@
 
 #include "cg1_stdinc.h"
 
-/* runs at 120 FPS like this */
-#define MS_PER_UPDATE 8
-#define SEC_PER_UPDATE (1.0f/1000.0f * MS_PER_UPDATE)
-#define GOAL_FPS 60
-
 /*
 
-The Game holds all the data aspects of the active game.
-Viewport position, player, maps/levels, NPC's.
 
 */
 typedef enum
@@ -20,8 +13,20 @@ typedef enum
     GST_INITIALIZED,
     GST_SPLASH,
     GST_MAIN_MENU,
-    GST_QUIT
+    GST_MAP_DEMO,
+    GST_QUIT,
+    GST_NUM_OF_STATES
 } game_state_t;
+
+typedef struct game_state_data_s
+{
+    game_state_t (*id) (void);
+    void (*initialize) (void);
+    void (*free) (void);
+    game_state_t (*update) (void);
+    void (*draw) (void);
+} game_state_data_t;
+
 
 typedef struct game_s
 {

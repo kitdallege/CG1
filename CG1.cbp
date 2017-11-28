@@ -12,7 +12,9 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-pedantic" />
 					<Add option="-Wall" />
+					<Add option="-std=c99" />
 					<Add option="-g" />
 				</Compiler>
 			</Target>
@@ -46,7 +48,20 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/cg1_game.h" />
+		<Unit filename="src/cg1_main_menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/cg1_main_menu.h" />
+		<Unit filename="src/cg1_mouse.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/cg1_mouse.h" />
+		<Unit filename="src/cg1_splash.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/cg1_splash.h" />
 		<Unit filename="src/cg1_stdinc.h" />
+		<Unit filename="src/defines.h" />
 		<Unit filename="src/main.c">
 			<Option compilerVar="CC" />
 		</Unit>
