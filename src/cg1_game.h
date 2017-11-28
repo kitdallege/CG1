@@ -3,6 +3,12 @@
 #include <SDL2/SDL.h>
 
 #include "cg1_stdinc.h"
+
+/* runs at 120 FPS like this */
+#define MS_PER_UPDATE 8
+#define SEC_PER_UPDATE (1.0f/1000.0f * MS_PER_UPDATE)
+#define GOAL_FPS 60
+
 /*
 
 The Game holds all the data aspects of the active game.

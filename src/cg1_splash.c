@@ -14,9 +14,7 @@ static cg1_splash_t *splash = NULL;
 static cg1_splash_state splash_state = SPLASH_HIDDEN;
 static uint32_t splash_alpha = SPLASH_ALPHA_MIN;
 static uint32_t splash_animation_last_update = 0;
-
-static uint32_t splash_start;
-static double splash_delta_sum;
+static uint32_t splash_animation_delta_sum = 0;
 
 boolean Splash_Init(SDL_Renderer *renderer)
 {
@@ -40,24 +38,20 @@ boolean Splash_Init(SDL_Renderer *renderer)
         return false;
     }
     SDL_FreeSurface(surface);
-    splash_start = 0;
-    splash_delta_sum = 0;
     return true;
 }
 
 
 boolean Splash_Ticker(double delta)
 {
-    uint32_t ticks = SDL_GetTicks();
-    if (splash_start == 0) {splash_start = ticks;}
-    splash_delta_sum += delta;
-    uint32_t elapsed = ticks - splash_animation_last_update;
+    splash_animation_delta_sum += delta;
+    uint32_t elapsed = splash_animation_delta_sum- splash_animation_last_update;
     switch (splash_state)
     {
     case SPLASH_HIDDEN:
         if (elapsed > SPLASH_HIDDEN_DELAY)
         {
-            splash_animation_last_update = ticks;
+            splash_animation_last_update = splash_animation_delta_sum;
             splash_state = SPLASH_FADEIN;
         } else {
             //SDL_Delay(SPLASH_HIDDEN_DELAY - elapsed);
@@ -73,19 +67,19 @@ boolean Splash_Ticker(double delta)
                 splash_alpha += FADEIN_STEP;
             }
             SDL_SetTextureAlphaMod(splash->texture, splash_alpha);
-            splash_animation_last_update = ticks;
+            splash_animation_last_update = splash_animation_delta_sum;
         }
         if (splash_alpha == SPLASH_ALPHA_MAX)
         {
             splash_state = SPLASH_VISIBLE;
-            splash_animation_last_update = ticks;
+            splash_animation_last_update = splash_animation_delta_sum;
         }
         break;
     case SPLASH_VISIBLE:
         if (elapsed > SPLASH_VISIBLE_LENGTH)
         {
             splash_state = SPLASH_FADEOUT;
-            splash_animation_last_update = ticks;
+            splash_animation_last_update = splash_animation_delta_sum;
         }
         break;
     case SPLASH_FADEOUT:
@@ -98,17 +92,15 @@ boolean Splash_Ticker(double delta)
                 splash_alpha -= FADEOUT_STEP;
             }
             SDL_SetTextureAlphaMod(splash->texture, splash_alpha);
-            splash_animation_last_update = ticks;
+            splash_animation_last_update = splash_animation_delta_sum;
         }
         if (splash_alpha <= SPLASH_ALPHA_MIN)
         {
             splash_state = SPLASH_DONE;
-            splash_animation_last_update = ticks;
+            splash_animation_last_update = splash_animation_delta_sum;
         }
         break;
     case SPLASH_DONE:
-        SDL_Log("ticks: %u", SDL_GetTicks() - splash_start);
-        SDL_Log("perf: %.2f", splash_delta_sum);
         return false;
         break;
     }

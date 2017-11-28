@@ -78,39 +78,40 @@ vsync (whilst great) isn't a means to provide a steady FPS.
 
  https://gafferongames.com/post/fix_your_timestep/
 */
+
+
+const short  MAX_UPDATES_PER_FRAME = 10;
+
 void Game_Mainloop(void)
 {
-    const short  MAX_UPDATES_PER_FRAME = 10;
-    unsigned short MAX_FRAMES_PER_SEC = 60;
-    int loops;
-    float interpolation;
-    float seconds_per_frame = 1.0f / (float)MAX_FRAMES_PER_SEC;
-    const uint64_t freq = SDL_GetPerformanceFrequency();
-    uint64_t time_per_tick = (uint64_t) (seconds_per_frame * freq);
-    uint64_t now_ticks;
-    uint64_t logic_ticks  = SDL_GetPerformanceCounter();
+    Uint64 lag = 0;
+    Uint64 prev_count = SDL_GetPerformanceCounter();
+    Uint64 curr_count = SDL_GetPerformanceCounter();
+    const Uint64 count_ps = SDL_GetPerformanceFrequency();
+    const Uint64 count_pms = count_ps / 1000;
+    double interpolation;
     do {
 //        SDL_Log("============START FRAME================");
-        loops = 0;
-        now_ticks = SDL_GetPerformanceCounter();
-        while (now_ticks >= logic_ticks && loops < MAX_UPDATES_PER_FRAME)
+        curr_count = SDL_GetPerformanceCounter();
+        lag += curr_count - prev_count;
+        prev_count = curr_count;
+        Game_ProcessEvents();
+        while (lag >= MS_PER_UPDATE * count_pms)
         {
-            Game_ProcessEvents();
-            double delta = ((now_ticks - logic_ticks) * 1000.0f) / (double)freq;
-            Game_Ticker(seconds_per_frame);
-//            SDL_Log("update: %.2f", delta);
-            logic_ticks += time_per_tick;
-            loops++;
+//            SDL_Log("tick!");
+            Game_Ticker(MS_PER_UPDATE);
+            lag -= MS_PER_UPDATE*count_pms;
         }
-        interpolation = ((now_ticks + time_per_tick - logic_ticks) / (float)time_per_tick);
+//        SDL_Log("lag: %lu", lag);
+//        SDL_Log("lag ms: %.2f", (lag * 1000.0f) / (double)count_ps);
+//        SDL_Log("count_pms: %lu", count_pms);
+        interpolation = (double)lag / (1000.0f * (double)count_pms);
         // TODO: update sounds
         SDL_RenderClear(renderer);
         Game_Draw(interpolation);
         SDL_RenderPresent(renderer);
 //        SDL_Log("============END FRAME================");
     } while (game_state != GST_QUIT);
-//    SDL_Log("time_per_tick: %.2f", time_per_tick / (float)freq);
-//    SDL_Log("m-seconds_per_frame: %.2f", seconds_per_frame * 1000);
 }
 
 //TODO: Turn this into a state-machine with transition functions.
