@@ -1,0 +1,86 @@
+
+#include "cg1_core.h"
+
+static SDL_Renderer    *renderer = NULL;
+static SDL_Window      *window = NULL;
+
+#define MAX_SCREEN_STATES 32
+static screen_state_t state[MAX_SCREEN_STATES];
+static ScreenId current_state = 1, last_state;
+
+boolean Core_Init(game_t *game)
+{
+    if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_VIDEO) != 0)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize SDL: %s", SDL_GetError());
+        return false;
+    }
+    IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF);
+    window = SDL_CreateWindow(
+                 GAME_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                 DISPLAY_W, DISPLAY_H, SDL_WINDOW_RESIZABLE);
+    if (!window)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize Window: %s", SDL_GetError());
+        return false;
+    }
+    renderer = SDL_CreateRenderer(window, -1,
+                                  SDL_RENDERER_ACCELERATED |
+                                  SDL_RENDERER_PRESENTVSYNC);
+    if (!renderer)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize Renderer: %s", SDL_GetError());
+        return false;
+    }
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+    SDL_RenderSetLogicalSize(renderer, DISPLAY_W, DISPLAY_H);
+    game->Init(window, renderer);
+    return true;
+}
+
+void Core_Run(game_t *game)
+{
+    Uint64 lag = 0;
+    Uint64 prev_count = SDL_GetPerformanceCounter();
+    Uint64 curr_count = SDL_GetPerformanceCounter();
+    const Uint64 count_ps = SDL_GetPerformanceFrequency();
+    const Uint64 count_pms = count_ps / 1000;
+    double interpolation;
+    SDL_Event event;
+    ScreenId next_state = current_state;
+    do {
+        curr_count = SDL_GetPerformanceCounter();
+        lag += curr_count - prev_count;
+        prev_count = curr_count;
+        while (SDL_PollEvent(&event))
+        {
+            game->Handle(&event);
+        }
+        while (lag >= MS_PER_UPDATE * count_pms)
+        {
+            next_state = game->Update(MS_PER_UPDATE);
+            lag -= MS_PER_UPDATE*count_pms;
+        }
+        if (next_state != current_state)
+        {
+            SDL_Log("Switching states from %i to %i", current_state, next_state);
+        }
+        // TODO: update sounds
+        SDL_RenderClear(renderer);
+        // TODO: Check out `interpolation` it seems off.
+        interpolation = (double)lag / (1000.0f * (double)count_pms);
+        game->Draw(interpolation);
+        SDL_RenderPresent(renderer);
+        current_state = next_state;
+    } while (next_state);
+}
+
+void Core_Quit(game_t *game)
+{
+    game->Quit();
+    free(game);
+    IMG_Quit();
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+}

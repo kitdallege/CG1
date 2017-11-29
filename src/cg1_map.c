@@ -57,9 +57,12 @@ boolean Map_Responder (SDL_Event *event)
     return true;
 }
 
-void Map_Render(SDL_Renderer *renderer)
+void Map_Render(SDL_Renderer *renderer, SDL_Rect *camera)
 {
-    SDL_RenderCopyEx(renderer, map_bmp, &map_rect, NULL, 0, NULL, SDL_FLIP_NONE);
+//    SDL_Rect srcRect = camera;
+    SDL_Log("camera: SDL_Rect {x:%i, y:%i, w:%i, h:%i}", camera->x, camera->y, camera->w, camera->h);
+    SDL_Log("map_rect: SDL_Rect {x:%i, y:%i, w:%i, h:%i}", map_rect.x, map_rect.y, map_rect.w, map_rect.h);
+    SDL_RenderCopyEx(renderer, map_bmp, camera, NULL, 0, NULL, SDL_FLIP_NONE);
 }
 
 // Utils to draw map
