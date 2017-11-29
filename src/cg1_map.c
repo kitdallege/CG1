@@ -9,15 +9,22 @@ static int x_delta, y_delta;
 
 SDL_Texture* render_map(tmx_map *map);
 
+const screen_state_t Map_Screen = {
+    .Init = Map_Init,
+    .Update = Map_Ticker,
+    .Handle = Map_Responder,
+    .Draw = Map_Render,
+    .DeInit = Map_Free
+};
+
 
 void* sdl_img_loader(const char *path)
 {
     return IMG_LoadTexture(gRenderer, path);
 }
 
-boolean Map_Init(SDL_Renderer *renderer)
+boolean Map_Init(void)
 {
-//    gRenderer = renderer;
     tmx_img_load_func = (void* (*)(const char*))sdl_img_loader;
     tmx_img_free_func = (void  (*)(void*))      SDL_DestroyTexture;
     if (!(map = tmx_load(MAP_FILEPATH)))
@@ -44,9 +51,9 @@ void Map_Free(void)
     tmx_map_free(map);
 }
 
-boolean Map_Ticker(uint32_t ticks)
+ScreenId Map_Ticker(double delta)
 {
-    return true;
+    return 2;
 }
 
 boolean Map_Responder (SDL_Event *event)
@@ -54,11 +61,11 @@ boolean Map_Responder (SDL_Event *event)
     return true;
 }
 
-void Map_Render(SDL_Renderer *renderer, SDL_Rect *camera)
+void Map_Render (float interpolation)
 {
-//    SDL_Log("camera: SDL_Rect {x:%i, y:%i, w:%i, h:%i}", camera->x, camera->y, camera->w, camera->h);
+//    SDL_Log("camera: SDL_Rect {x:%i, y:%i, w:%i, h:%i}", gCamera->x, gCamera->y, gCamera->w, gCamera->h);
 //    SDL_Log("map_rect: SDL_Rect {x:%i, y:%i, w:%i, h:%i}", map_rect.x, map_rect.y, map_rect.w, map_rect.h);
-    SDL_RenderCopyEx(renderer, map_bmp, camera, NULL, 0, NULL, SDL_FLIP_NONE);
+    SDL_RenderCopyEx(gRenderer, map_bmp, gCamera, NULL, 0, NULL, SDL_FLIP_NONE);
 }
 
 // Utils to draw map

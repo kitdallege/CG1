@@ -2,14 +2,15 @@
 #define CG1_MAP_H_INCLUDED
 
 #include "cg1_stdinc.h"
+#include "cg1_screen.h"
 #include "cg1_globals.h"
 #include <tmx.h>
 
-boolean Map_Init(SDL_Renderer *renderer);
-void Map_Free(void);
+const screen_state_t Map_Screen;
 
-boolean Map_Ticker(uint32_t ticks);
+boolean Map_Init(void);
+ScreenId Map_Ticker(double delta);
 boolean Map_Responder (SDL_Event *event);
-void Map_Render(SDL_Renderer *renderer, SDL_Rect *camera);
-
+void Map_Render(float interpolation);
+void Map_Free(void);
 #endif // CG1_MAP_H_INCLUDED

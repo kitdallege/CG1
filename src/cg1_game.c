@@ -12,7 +12,7 @@
 // Globals
 //static SDL_Renderer    *gRenderer = NULL;
 //static SDL_Window      *gWindow = NULL;
-static SDL_Rect         camera = {0, 0, DISPLAY_W, DISPLAY_H};
+//static SDL_Rect         camera = {0, 0, DISPLAY_W, DISPLAY_H};
 static game_state_t     game_state;
 
 static ScreenId current_screen = 0, next_screen, prev_screen;
@@ -32,13 +32,20 @@ boolean Game_Init(SDL_Window *window, SDL_Renderer *renderer)
     // set 'game' globals before bring in the various modules which use them.
     gWindow = window;
     gRenderer = renderer;
+    gCamera = malloc(sizeof(SDL_Rect));
+    gCamera->x = 0;
+    gCamera->y = 0;
+    gCamera->w = DISPLAY_W;
+    gCamera->h = DISPLAY_H;
+//    SDL_Log("camera: SDL_Rect {x:%i, y:%i, w:%i, h:%i}", gCamera->x, gCamera->y, gCamera->w, gCamera->h);
     SDL_SetWindowTitle(window, "C-Game v1");
     // screen state-machine init.
     screen_stack[0] = Splash_Screen;
     screen_stack[0].Init();
     screen_stack[1] = Main_Menu_Screen;
+    screen_stack[2] = Map_Screen;
     Mouse_Init();
-    Map_Init(renderer);
+//    Map_Init(renderer);
     game_state = GST_SPLASH;
     return true;
 }
@@ -109,20 +116,21 @@ boolean Game_Handle( SDL_Event *event)
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     if (state[SDL_SCANCODE_W])
     {
-        camera.y -= camera.y-CAMERA_STEP>0?CAMERA_STEP:0;
+        gCamera->y -= gCamera->y-CAMERA_STEP>0?CAMERA_STEP:0;
     }
     if (state[SDL_SCANCODE_S])
     {
-        camera.y += camera.y+camera.h+CAMERA_STEP<MAP_H?CAMERA_STEP:0;
+        gCamera->y += gCamera->y+gCamera->h+CAMERA_STEP<MAP_H?CAMERA_STEP:0;
     }
     if (state[SDL_SCANCODE_A])
     {
-        camera.x -= camera.x-CAMERA_STEP>0?CAMERA_STEP:0;
+        gCamera->x -= gCamera->x-CAMERA_STEP>0?CAMERA_STEP:0;
     }
     if (state[SDL_SCANCODE_D])
     {
-        camera.x += camera.x+camera.w+CAMERA_STEP<MAP_W?CAMERA_STEP:0;
+        gCamera->x += gCamera->x+gCamera->w+CAMERA_STEP<MAP_W?CAMERA_STEP:0;
     }
+//    SDL_Log("camera: SDL_Rect {x:%i, y:%i, w:%i, h:%i}", gCamera->x, gCamera->y, gCamera->w, gCamera->h);
     Mouse_Reponder(event);
     return true;
 }

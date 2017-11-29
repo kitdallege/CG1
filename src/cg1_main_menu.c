@@ -5,6 +5,7 @@
 #define BACKGROUND "/home/code/c-code/CG1/assets/backgrounds/sunsetintheswamp.png"
 
 static SDL_Texture *background = NULL;
+static uint32_t menu_delay_delta_sum = 0;
 
 const screen_state_t Main_Menu_Screen = {
     .Init = Main_Menu_Init,
@@ -32,7 +33,13 @@ void Main_Menu_Free(void)
 
 ScreenId Main_Menu_Ticker(double delta)
 {
-    return 1;
+    menu_delay_delta_sum += delta;
+    if (menu_delay_delta_sum > 2000)
+    {
+        return 2;
+    } else {
+        return 1;
+    }
 }
 
 boolean Main_Menu_Responder (SDL_Event *event)

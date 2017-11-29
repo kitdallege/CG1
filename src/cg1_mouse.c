@@ -3,7 +3,7 @@
 #define CURSOR_TEXTURE "/home/code/c-code/CG1/assets/cursor/cursor_final.png"
 
 SDL_Texture *cursor = NULL;
-SDL_Rect *position = NULL;
+static SDL_Rect *position = NULL;
 
 boolean Mouse_Init()
 {
@@ -15,7 +15,7 @@ boolean Mouse_Init()
     }
     SDL_ShowCursor(SDL_DISABLE);
     //SDL_SetRelativeMouseMode(SDL_TRUE); // captures mouse
-    position = malloc(sizeof *position);
+    position = malloc(sizeof(SDL_Rect));
     position->w = 32;
     position->h = 32;
     return true;

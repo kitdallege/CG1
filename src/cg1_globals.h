@@ -6,6 +6,6 @@
 
 extern SDL_Renderer    *gRenderer;
 extern SDL_Window      *gWindow;
-extern SDL_Rect         gCamera;
+extern SDL_Rect        *gCamera;
 
 #endif // CG1_GLOBALS_H_INCLUDED

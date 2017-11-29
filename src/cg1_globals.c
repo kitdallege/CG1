@@ -2,4 +2,4 @@
 
 SDL_Renderer    *gRenderer = NULL;
 SDL_Window      *gWindow = NULL;
-SDL_Rect         gCamera = {0, 0, DISPLAY_W, DISPLAY_H};
+SDL_Rect        *gCamera = NULL;
