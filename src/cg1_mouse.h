@@ -1,14 +1,13 @@
 #ifndef CG1_MOUSE_H_INCLUDED
 #define CG1_MOUSE_H_INCLUDED
 
-#include "SDL2/SDL.h"
 #include "cg1_stdinc.h"
+#include "cg1_globals.h"
 
-boolean Mouse_Init(SDL_Renderer *renderer);
-void Mouse_Free(void);
-
-boolean Mouse_Ticker(uint32_t ticks);
+boolean Mouse_Init();
+boolean Mouse_Ticker(double delta);
 boolean Mouse_Reponder(SDL_Event *event);
-void Mouse_Render(SDL_Renderer *renderer);
+void Mouse_Render();
+void Mouse_Free(void);
 
 #endif // CG1_MOUSE_H_INCLUDED

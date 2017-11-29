@@ -4,10 +4,6 @@
 static SDL_Renderer    *renderer = NULL;
 static SDL_Window      *window = NULL;
 
-#define MAX_SCREEN_STATES 32
-static screen_state_t state[MAX_SCREEN_STATES];
-static ScreenId current_state = 1, last_state;
-
 boolean Core_Init(game_t *game)
 {
     if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_VIDEO) != 0)
@@ -47,7 +43,7 @@ void Core_Run(game_t *game)
     const Uint64 count_pms = count_ps / 1000;
     double interpolation;
     SDL_Event event;
-    ScreenId next_state = current_state;
+    boolean running = true;
     do {
         curr_count = SDL_GetPerformanceCounter();
         lag += curr_count - prev_count;
@@ -58,12 +54,8 @@ void Core_Run(game_t *game)
         }
         while (lag >= MS_PER_UPDATE * count_pms)
         {
-            next_state = game->Update(MS_PER_UPDATE);
+            running = game->Update(MS_PER_UPDATE);
             lag -= MS_PER_UPDATE*count_pms;
-        }
-        if (next_state != current_state)
-        {
-            SDL_Log("Switching states from %i to %i", current_state, next_state);
         }
         // TODO: update sounds
         SDL_RenderClear(renderer);
@@ -71,8 +63,7 @@ void Core_Run(game_t *game)
         interpolation = (double)lag / (1000.0f * (double)count_pms);
         game->Draw(interpolation);
         SDL_RenderPresent(renderer);
-        current_state = next_state;
-    } while (next_state);
+    } while (running);
 }
 
 void Core_Quit(game_t *game)

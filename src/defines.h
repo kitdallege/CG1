@@ -2,7 +2,7 @@
 #define DEFINES_H_INCLUDED
 
 
-/* runs at 120 FPS like this */
+/* sets the run speed of the simulation */
 #define MS_PER_UPDATE 8
 #define SEC_PER_UPDATE (1.0f/1000.0f * MS_PER_UPDATE)
 #define GOAL_FPS 60

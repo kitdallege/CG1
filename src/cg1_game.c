@@ -5,82 +5,71 @@
 #include "cg1_map.h"
 #include "cg1_mouse.h"
 #include "cg1_game.h"
+#include "cg1_screen.h"
 
 #define CAMERA_STEP 2
 
 // Globals
-static SDL_Renderer    *gRenderer = NULL;
-static SDL_Window      *gWindow = NULL;
+//static SDL_Renderer    *gRenderer = NULL;
+//static SDL_Window      *gWindow = NULL;
 static SDL_Rect         camera = {0, 0, DISPLAY_W, DISPLAY_H};
 static game_state_t     game_state;
 
-
-//void Game_Mainloop();
-//void Game_ProcessEvents (void);
+static ScreenId current_screen = 0, next_screen, prev_screen;
+static screen_state_t screen_stack[3];
+// for each screen in screen_stack the transition table grows 1 item in
+// both directions. Though most of the table will be NULL values as only
+//certain screens transform to one another.
+//static transition_func_t *transition = NULL;
+//static transition_func_t screen_transition[][] = {
+//    {NULL, NULL, NULL},
+//    {NULL, NULL, NULL},
+//    {NULL, NULL, NULL},
+//};
 
 boolean Game_Init(SDL_Window *window, SDL_Renderer *renderer)
 {
-    SDL_SetWindowTitle(window, "C-Game v1");
-    Splash_Init(renderer);
-    Main_Menu_Init(renderer);
-    Mouse_Init(renderer);
-    Map_Init(renderer);
-    game_state = GST_SPLASH;
+    // set 'game' globals before bring in the various modules which use them.
     gWindow = window;
     gRenderer = renderer;
+    SDL_SetWindowTitle(window, "C-Game v1");
+    // screen state-machine init.
+    screen_stack[0] = Splash_Screen;
+    screen_stack[0].Init();
+    screen_stack[1] = Main_Menu_Screen;
+    Mouse_Init();
+    Map_Init(renderer);
+    game_state = GST_SPLASH;
     return true;
 }
 
-//
-//void Game_Mainloop(void)
-//{
-//    Uint64 lag = 0;
-//    Uint64 prev_count = SDL_GetPerformanceCounter();
-//    Uint64 curr_count = SDL_GetPerformanceCounter();
-//    const Uint64 count_ps = SDL_GetPerformanceFrequency();
-//    const Uint64 count_pms = count_ps / 1000;
-//    double interpolation;
-//    do {
-//        curr_count = SDL_GetPerformanceCounter();
-//        lag += curr_count - prev_count;
-//        prev_count = curr_count;
-//        Game_ProcessEvents();
-//        while (lag >= MS_PER_UPDATE * count_pms)
-//        {
-//            Game_Ticker(MS_PER_UPDATE);
-//            lag -= MS_PER_UPDATE*count_pms;
-//        }
-//        // TODO: update sounds
-//        SDL_RenderClear(renderer);
-//        // TODO: Check out `interpolation` it seems off.
-//        interpolation = (double)lag / (1000.0f * (double)count_pms);
-//        Game_Draw(interpolation);
-//        SDL_RenderPresent(renderer);
-//    } while (game_state != GST_QUIT);
-//}
-
-//TODO: Turn this into a state-machine with transition functions.
-//Need ability to stack FSM's, and for an FSM to be able to push onto that
-// stack.
-ScreenId Game_Update (double delta)
+boolean Game_Update (double delta)
 {
     // update based on time thats passed
-    if (game_state == GST_SPLASH && Splash_Ticker(delta) == false)
+    next_screen = screen_stack[current_screen].Update(delta);
+    if (next_screen != current_screen)
     {
-        game_state = GST_MAP_DEMO;
+        if(screen_stack[current_screen].DeInit)
+        {
+            screen_stack[current_screen].DeInit();
+        }
+        screen_stack[next_screen].Init();
+        prev_screen = current_screen;
+        current_screen = next_screen;
+        //transition = screen_transition[current_screen][next_screen];
     }
-    return game_state;
-}
-//
-//void Game_ProcessEvents (void)
-//{
-//    SDL_Event event;
-//    while (SDL_PollEvent(&event))
+//    if (game_state == GST_SPLASH && Splash_Ticker(delta) == false)
 //    {
-//
-//        Game_Responder(&event);
+//        game_state = GST_MAP_DEMO;
 //    }
-//}
+    if (game_state == GST_QUIT)
+    {
+        // probably set up a transition to quit rather than just 'go black'.
+        return false;
+    }
+//    Mouse_Ticker(delta);
+    return true;
+}
 
 boolean Game_Handle( SDL_Event *event)
 {
@@ -98,20 +87,25 @@ boolean Game_Handle( SDL_Event *event)
         default:
             break;
     }
-    switch (game_state)
-    {
-        case GST_SPLASH:
-            Splash_Reponder(event);
-            break;
-        case GST_MAIN_MENU:
-            Main_Menu_Responder(event);
-            break;
-        case GST_MAP_DEMO:
-            Map_Responder(event);
-        default:
-            break;
-    }
+//    switch (game_state)
+//    {
+//        case GST_SPLASH:
+//            Splash_Reponder(event);
+//            break;
+//        case GST_MAIN_MENU:
+//            Main_Menu_Responder(event);
+//            break;
+//        case GST_MAP_DEMO:
+//            Map_Responder(event);
+//        default:
+//            break;
+//    }
     // TODO: Camera needs its own home.
+    /*
+    Needs to work off a state machine principal to reduce the choppy
+    behavior. should just turn it on/off @ keyboard event
+    and then update those that are on every Update() chance we get.
+    */
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     if (state[SDL_SCANCODE_W])
     {
@@ -136,19 +130,26 @@ boolean Game_Handle( SDL_Event *event)
 void Game_Draw (float interpolation)
 {
 //    SDL_Log("interpolation: %.2f", interpolation);
-    switch (game_state)
-    {
-        case GST_SPLASH:
-            Splash_Render(gRenderer);
-            break;
-        case GST_MAIN_MENU:
-            Main_Menu_Render(gRenderer);
-            break;
-        case GST_MAP_DEMO:
-            Map_Render(gRenderer, &camera);
-        default:
-            break;
-    }
+//    if(transition)
+//    {
+//       transition.Draw(interpolation);
+//    } else {
+        screen_stack[current_screen].Draw(interpolation);
+//    }
+
+//    switch (game_state)
+//    {
+//        case GST_SPLASH:
+//            Splash_Render(gRenderer);
+//            break;
+//        case GST_MAIN_MENU:
+//            Main_Menu_Render(gRenderer);
+//            break;
+//        case GST_MAP_DEMO:
+//            Map_Render(gRenderer, &camera);
+//        default:
+//            break;
+//    }
     Mouse_Render(gRenderer);
 }
 
@@ -158,4 +159,6 @@ void Game_Quit(void)
     Mouse_Free();
     Main_Menu_Free();
     Splash_Free();
+//    SDL_DestroyRenderer(gRenderer);
+//    SDL_DestroyWindow(gWindow);
 }

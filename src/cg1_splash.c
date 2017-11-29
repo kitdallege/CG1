@@ -10,6 +10,8 @@
 #define FADEOUT_STEP 4
 #define FADEOUT_STEP_DELAY 10
 
+
+//static SDL_Renderer *gRenderer;
 static cg1_splash_t *splash = NULL;
 
 static cg1_splash_state splash_state = SPLASH_HIDDEN;
@@ -17,7 +19,15 @@ static uint32_t splash_alpha = SPLASH_ALPHA_MIN;
 static uint32_t splash_animation_last_update = 0;
 static uint32_t splash_animation_delta_sum = 0;
 
-boolean Splash_Init(SDL_Renderer *renderer)
+const screen_state_t Splash_Screen = {
+    .Init = Splash_Init,
+    .Update = Splash_Ticker,
+    .Handle = Splash_Reponder,
+    .Draw = Splash_Render,
+    .DeInit = NULL
+};
+
+boolean Splash_Init()
 {
     splash = malloc(sizeof *splash);
     SDL_Surface *surface = NULL;
@@ -27,7 +37,7 @@ boolean Splash_Init(SDL_Renderer *renderer)
         return false;
     }
     SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0xcc, 0xcc, 0xcc ));
-    splash->texture = SDL_CreateTextureFromSurface(renderer, surface);
+    splash->texture = SDL_CreateTextureFromSurface(gRenderer, surface);
     if (SDL_SetTextureBlendMode(splash->texture, SDL_BLENDMODE_BLEND) != 0)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Error setting texture blend-mode: %s\n", SDL_GetError());
@@ -43,7 +53,7 @@ boolean Splash_Init(SDL_Renderer *renderer)
 }
 
 
-boolean Splash_Ticker(double delta)
+ScreenId Splash_Ticker(double delta)
 {
     splash_animation_delta_sum += delta;
     uint32_t elapsed = splash_animation_delta_sum- splash_animation_last_update;
@@ -102,10 +112,10 @@ boolean Splash_Ticker(double delta)
         }
         break;
     case SPLASH_DONE:
-        return false;
+        return 1;
         break;
     }
-    return true;
+    return 0;
 
 }
 
@@ -114,10 +124,10 @@ boolean Splash_Reponder(SDL_Event *event)
     return true; // eat all events processing none.
 }
 
-void Splash_Render(SDL_Renderer *renderer)
+void Splash_Render(float interpolation)
 {
     //SDL_Log("splash_alpha: %i", splash_alpha);
-    SDL_RenderCopy(renderer, splash->texture, NULL, NULL);
+    SDL_RenderCopy(gRenderer, splash->texture, NULL, NULL);
     return ;
 }
 

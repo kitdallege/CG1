@@ -2,12 +2,16 @@
 #define CG1_MAIN_MENU_H_INCLUDED
 
 #include "cg1_stdinc.h"
+#include "cg1_screen.h"
+#include "cg1_globals.h"
 
-boolean Main_Menu_Init(SDL_Renderer *renderer);
+const screen_state_t Main_Menu_Screen;
+
+boolean Main_Menu_Init();
 void Main_Menu_Free(void);
 
-boolean Main_Menu_Ticker(uint32_t ticks);
-boolean Main_Menu_Responder (SDL_Event *event);
-void Main_Menu_Render(SDL_Renderer *renderer);
+ScreenId    Main_Menu_Ticker(double delta);
+boolean     Main_Menu_Responder (SDL_Event *event);
+void        Main_Menu_Render(float interpolation);
 
 #endif // CG1_MAIN_MENU_H_INCLUDED

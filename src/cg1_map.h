@@ -2,6 +2,7 @@
 #define CG1_MAP_H_INCLUDED
 
 #include "cg1_stdinc.h"
+#include "cg1_globals.h"
 #include <tmx.h>
 
 boolean Map_Init(SDL_Renderer *renderer);

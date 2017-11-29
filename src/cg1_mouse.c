@@ -5,9 +5,9 @@
 SDL_Texture *cursor = NULL;
 SDL_Rect *position = NULL;
 
-boolean Mouse_Init(SDL_Renderer *renderer)
+boolean Mouse_Init()
 {
-    cursor = IMG_LoadTexture(renderer, CURSOR_TEXTURE);
+    cursor = IMG_LoadTexture(gRenderer, CURSOR_TEXTURE);
     if (cursor == NULL)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Error loading cursor texture: %s\n", SDL_GetError());
@@ -27,7 +27,7 @@ void Mouse_Free(void)
 
 }
 
-boolean Mouse_Ticker(uint32_t ticks)
+boolean Mouse_Ticker(double delta)
 {
     if (position == NULL)
     {
@@ -60,7 +60,7 @@ boolean Mouse_Reponder(SDL_Event *event)
     return true;
 }
 
-void Mouse_Render(SDL_Renderer *renderer)
+void Mouse_Render()
 {
-    SDL_RenderCopy(renderer, cursor, NULL, position);
+    SDL_RenderCopy(gRenderer, cursor, NULL, position);
 }

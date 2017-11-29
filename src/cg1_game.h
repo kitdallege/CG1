@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 
 #include "cg1_stdinc.h"
+#include "cg1_globals.h"
 #include "cg1_screen.h"
 typedef enum
 {
@@ -16,7 +17,7 @@ typedef enum
 
 
 boolean Game_Init(SDL_Window *window, SDL_Renderer *renderer);
-ScreenId Game_Update (double delta);
+boolean Game_Update (double delta);
 boolean Game_Handle (SDL_Event *ev);
 void Game_Draw(float interpolation);
 void Game_Quit(void);

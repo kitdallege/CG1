@@ -25,11 +25,11 @@ GameState
 
 typedef struct game_s
 {
-    boolean     (*Init)(SDL_Window *window, SDL_Renderer *renderer);
-    ScreenId    (*Update)(double delta);
-    boolean     (*Handle)(SDL_Event *event);
-    void        (*Draw)(float interpolation);
-    void        (*Quit)(void);
+    boolean (*Init)(SDL_Window *window, SDL_Renderer *renderer);
+    boolean (*Update)(double delta);
+    boolean (*Handle)(SDL_Event *event);
+    void    (*Draw)(float interpolation);
+    void    (*Quit)(void);
 } game_t;
 
 //Public API (eg: in main)

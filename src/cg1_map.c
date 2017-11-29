@@ -7,9 +7,6 @@ static SDL_Texture *map_bmp;
 static SDL_Rect map_rect;
 static int x_delta, y_delta;
 
-
-SDL_Renderer *gRenderer;
-
 SDL_Texture* render_map(tmx_map *map);
 
 
@@ -20,7 +17,7 @@ void* sdl_img_loader(const char *path)
 
 boolean Map_Init(SDL_Renderer *renderer)
 {
-    gRenderer = renderer;
+//    gRenderer = renderer;
     tmx_img_load_func = (void* (*)(const char*))sdl_img_loader;
     tmx_img_free_func = (void  (*)(void*))      SDL_DestroyTexture;
     if (!(map = tmx_load(MAP_FILEPATH)))
@@ -59,9 +56,8 @@ boolean Map_Responder (SDL_Event *event)
 
 void Map_Render(SDL_Renderer *renderer, SDL_Rect *camera)
 {
-//    SDL_Rect srcRect = camera;
-    SDL_Log("camera: SDL_Rect {x:%i, y:%i, w:%i, h:%i}", camera->x, camera->y, camera->w, camera->h);
-    SDL_Log("map_rect: SDL_Rect {x:%i, y:%i, w:%i, h:%i}", map_rect.x, map_rect.y, map_rect.w, map_rect.h);
+//    SDL_Log("camera: SDL_Rect {x:%i, y:%i, w:%i, h:%i}", camera->x, camera->y, camera->w, camera->h);
+//    SDL_Log("map_rect: SDL_Rect {x:%i, y:%i, w:%i, h:%i}", map_rect.x, map_rect.y, map_rect.w, map_rect.h);
     SDL_RenderCopyEx(renderer, map_bmp, camera, NULL, 0, NULL, SDL_FLIP_NONE);
 }
 

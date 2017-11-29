@@ -1,8 +1,9 @@
 #ifndef CG1_SPLASH_H_INCLUDED
 #define CG1_SPLASH_H_INCLUDED
 
-#include <SDL2/SDL.h>
 #include "cg1_stdinc.h"
+#include "cg1_globals.h"
+#include "cg1_screen.h"
 
 typedef struct cg1_splash_s
 {
@@ -24,10 +25,11 @@ typedef enum
 // TODO: Move (cg1_splash_t *splash) to module static
 // as there will only ever be one, so why thread it through a bunch of crap.
 
-boolean Splash_Init(SDL_Renderer *renderer);
+const screen_state_t Splash_Screen;
+boolean Splash_Init(void);
 void Splash_Free(void);
 
-boolean Splash_Ticker(double delta);
+ScreenId Splash_Ticker(double delta);
 boolean Splash_Reponder(SDL_Event *event);
-void Splash_Render(SDL_Renderer *renderer);
+void Splash_Render(float interpolation);
 #endif // CG1_SPLASH_H_INCLUDED

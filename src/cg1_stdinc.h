@@ -8,6 +8,7 @@
 #include <SDL2/SDL_keyboard.h>
 #include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_image.h>
+
 #include "defines.h"
 
 typedef enum {false, true} boolean;
