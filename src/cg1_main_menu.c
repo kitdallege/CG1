@@ -8,6 +8,7 @@ static SDL_Texture *background = NULL;
 static uint32_t menu_delay_delta_sum = 0;
 
 const screen_state_t Main_Menu_Screen = {
+    .screenId = GS_MAIN_MENU,
     .Init = Main_Menu_Init,
     .Update = Main_Menu_Ticker,
     .Handle = Main_Menu_Responder,
@@ -36,9 +37,9 @@ ScreenId Main_Menu_Ticker(double delta)
     menu_delay_delta_sum += delta;
     if (menu_delay_delta_sum > 2000)
     {
-        return 2;
+        return GS_MAP;
     } else {
-        return 1;
+        return GS_MAIN_MENU;
     }
 }
 

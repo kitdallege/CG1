@@ -3,7 +3,7 @@
 typedef unsigned short ScreenId;
 typedef struct screen_state_s
 {
-    ScreenId    (*id) (void); // not sure about this one
+    ScreenId    screenId; // not sure about this one
     // could just be a scalar instead of a method. eg:
     //ScreenId    id;
     // also knowing the previous screen might be nice if a screen just wants

@@ -1,63 +1,30 @@
-/*
-	TODO:
-        - Move subsystems initialization to engine
-            - Texture loading
-            - Map loader
-            - Keyboard & Mouse handling
-                - Player: Stub out a player to hook up because its the primary use-case.
-            - Sound ?
-
-
-        - Initialize Game
-            - Load Screen
-            - Start Menu
-            - Game
-            - Menu
-            - Map
-            - Shops/Dialog
-            - Dev Console
-            - FPS Display
-
-*/
-//#include "cg1_game.h"
-//
-//int main(int argc, char *argv[])
-//{
-//    game_t *game;
-//
-//    if (!(game = Game_Init())){
-//        goto errorquit;
-//    }
-//    Game_Run(game);
-//    Game_Quit(game);
-//    return 0;
-//
-//errorquit:
-//    Game_Quit(game);
-//    return -1;
-//}
-
-
+/**
+ * Core contains the basic code to get a window up and setup an SDL_Renderer.
+ * It then Init()'s the game, giving it a chance to hook the window/renderer
+ * and then drops into the run-loop. The game's update/handle/draw are call
+ * within the run-loop, game.Update() returns a boolean which controls when
+ * the run-loop exits.
+ */
 #include "cg1_core.h"
 #include "cg1_game.h"
 
 int main(int argc, char *argv[])
 {
     game_t *game = malloc(sizeof(game_t));
-    game->Init = Game_Init;
-    game->Update = Game_Update;
-    game->Handle = Game_Handle;
-    game->Draw = Game_Draw;
-    game->Quit = Game_Quit;
+    game->Init      = Game_Init;
+    game->Update    = Game_Update;
+    game->Handle    = Game_Handle;
+    game->Draw      = Game_Draw;
+    game->Quit      = Game_Quit;
 
     if (!Core_Init(game)){
-        goto errorquit;
+        goto errorQuit;
     }
     Core_Run(game);
     Core_Quit(game);
     return 0;
 
-errorquit:
+errorQuit:
     Core_Quit(game);
     return -1;
 }

@@ -15,4 +15,6 @@
 #define MAP_W 720
 #define GAME_TITLE "C-Game #1"
 
+//TODO: Define some pixel-to->meter world scale constants
+
 #endif // DEFINES_H_INCLUDED

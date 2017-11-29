@@ -10,6 +10,7 @@ static int x_delta, y_delta;
 SDL_Texture* render_map(tmx_map *map);
 
 const screen_state_t Map_Screen = {
+    .screenId = GS_MAP,
     .Init = Map_Init,
     .Update = Map_Ticker,
     .Handle = Map_Responder,
@@ -53,7 +54,7 @@ void Map_Free(void)
 
 ScreenId Map_Ticker(double delta)
 {
-    return 2;
+    return GS_MAP;
 }
 
 boolean Map_Responder (SDL_Event *event)

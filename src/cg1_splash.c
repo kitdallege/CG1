@@ -20,6 +20,7 @@ static uint32_t splash_animation_last_update = 0;
 static uint32_t splash_animation_delta_sum = 0;
 
 const screen_state_t Splash_Screen = {
+    .screenId = GS_SPLASH,
     .Init = Splash_Init,
     .Update = Splash_Ticker,
     .Handle = Splash_Reponder,
@@ -112,10 +113,10 @@ ScreenId Splash_Ticker(double delta)
         }
         break;
     case SPLASH_DONE:
-        return 1;
+        return GS_MAIN_MENU;
         break;
     }
-    return 0;
+    return GS_SPLASH;
 
 }
 

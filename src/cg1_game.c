@@ -15,8 +15,8 @@
 //static SDL_Rect         camera = {0, 0, DISPLAY_W, DISPLAY_H};
 static game_state_t     game_state;
 
-static ScreenId current_screen = 0, next_screen, prev_screen;
-static screen_state_t screen_stack[3];
+static ScreenId current_screen = GS_SPLASH, next_screen, prev_screen;
+static screen_state_t screen_stack[GS_SCREEN_COUNT];
 // for each screen in screen_stack the transition table grows 1 item in
 // both directions. Though most of the table will be NULL values as only
 //certain screens transform to one another.
@@ -40,10 +40,10 @@ boolean Game_Init(SDL_Window *window, SDL_Renderer *renderer)
 //    SDL_Log("camera: SDL_Rect {x:%i, y:%i, w:%i, h:%i}", gCamera->x, gCamera->y, gCamera->w, gCamera->h);
     SDL_SetWindowTitle(window, "C-Game v1");
     // screen state-machine init.
-    screen_stack[0] = Splash_Screen;
-    screen_stack[0].Init();
-    screen_stack[1] = Main_Menu_Screen;
-    screen_stack[2] = Map_Screen;
+    screen_stack[GS_SPLASH] = Splash_Screen;
+    screen_stack[GS_SPLASH].Init();
+    screen_stack[GS_MAIN_MENU] = Main_Menu_Screen;
+    screen_stack[GS_MAP] = Map_Screen;
     Mouse_Init();
 //    Map_Init(renderer);
     game_state = GST_SPLASH;
@@ -137,6 +137,7 @@ boolean Game_Handle( SDL_Event *event)
 
 void Game_Draw (float interpolation)
 {
+    // draw the current screen first
 //    SDL_Log("interpolation: %.2f", interpolation);
 //    if(transition)
 //    {
@@ -144,20 +145,8 @@ void Game_Draw (float interpolation)
 //    } else {
         screen_stack[current_screen].Draw(interpolation);
 //    }
-
-//    switch (game_state)
-//    {
-//        case GST_SPLASH:
-//            Splash_Render(gRenderer);
-//            break;
-//        case GST_MAIN_MENU:
-//            Main_Menu_Render(gRenderer);
-//            break;
-//        case GST_MAP_DEMO:
-//            Map_Render(gRenderer, &camera);
-//        default:
-//            break;
-//    }
+    // add player layer
+    // layer on the mouse
     Mouse_Render(gRenderer);
 }
 
@@ -167,6 +156,5 @@ void Game_Quit(void)
     Mouse_Free();
     Main_Menu_Free();
     Splash_Free();
-//    SDL_DestroyRenderer(gRenderer);
-//    SDL_DestroyWindow(gWindow);
+    free(gCamera);
 }

@@ -3,6 +3,7 @@
 
 #include "cg1_stdinc.h"
 #include "cg1_screen.h"
+#include "cg1_game_screens.h"
 #include "cg1_globals.h"
 
 const screen_state_t Main_Menu_Screen;
