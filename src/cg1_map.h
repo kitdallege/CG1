@@ -11,7 +11,7 @@ const screen_state_t map_screen;
 
 bool map_init(void);
 game_screens_t map_ticker(double delta);
-bool map_responder (SDL_Event *event);
+bool map_responder(SDL_Event *event);
 void map_render(float interpolation);
 void map_free(void);
 #endif // CG1_MAP_H_INCLUDED

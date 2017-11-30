@@ -19,7 +19,8 @@ bool main_menu_init(void)
 {
         background = IMG_LoadTexture(gRenderer, BACKGROUND);
         if (background == NULL) {
-                SDL_LogError(SDL_LOG_CATEGORY_ASSERT, "Failed to LoadTexture: %s", BACKGROUND);
+                SDL_LogError(SDL_LOG_CATEGORY_ASSERT,
+                             "Failed to LoadTexture: %s", BACKGROUND);
                 return false;
         }
         return true;
@@ -40,7 +41,7 @@ game_screens_t main_menu_ticker(double delta)
         }
 }
 
-bool main_menu_responder (SDL_Event *event)
+bool main_menu_responder(SDL_Event *event)
 {
         return true;
 }

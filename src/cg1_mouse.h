@@ -4,7 +4,7 @@
 #include "cg1_stdinc.h"
 #include "cg1_globals.h"
 
-bool mouse_init();
+bool mouse_init(void);
 bool mouse_ticker(double delta);
 bool mouse_reponder(SDL_Event *event);
 void mouse_draw();

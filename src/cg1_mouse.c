@@ -5,7 +5,7 @@
 SDL_Texture *cursor = NULL;
 static SDL_Rect *position = NULL;
 
-bool mouse_init()
+bool mouse_init(void)
 {
         cursor = IMG_LoadTexture(gRenderer, CURSOR_TEXTURE);
         if (cursor == NULL) {

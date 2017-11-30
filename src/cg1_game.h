@@ -16,8 +16,8 @@ typedef enum {
 
 
 bool game_init(SDL_Window *window, SDL_Renderer *renderer);
-bool game_update (double delta);
-bool game_handle (SDL_Event *ev);
+bool game_update(double delta);
+bool game_handle(SDL_Event *ev);
 void game_draw(float interpolation);
 void game_quit(void);
 

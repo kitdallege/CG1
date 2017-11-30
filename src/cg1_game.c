@@ -62,7 +62,7 @@ bool game_init(SDL_Window *window, SDL_Renderer *renderer)
         return true;
 }
 
-bool game_update (double delta)
+bool game_update(double delta)
 {
         // update based on time thats passed
         next_screen = screen_stack[current_screen].update(delta);
@@ -83,7 +83,7 @@ bool game_update (double delta)
         return true;
 }
 
-bool game_handle( SDL_Event *event)
+bool game_handle(SDL_Event *event)
 {
         switch (event->type) {
         case SDL_QUIT:
@@ -121,7 +121,7 @@ bool game_handle( SDL_Event *event)
         return true;
 }
 
-void game_draw (float interpolation)
+void game_draw(float interpolation)
 {
         // draw the current screen first
 //    SDL_Log("interpolation: %.2f", interpolation);

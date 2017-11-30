@@ -5,23 +5,28 @@ static SDL_Window      *window = NULL;
 
 bool core_init(game_t *game)
 {
-        if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_VIDEO) != 0) {
-                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize SDL: %s", SDL_GetError());
+        if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_EVENTS |
+                     SDL_INIT_TIMER | SDL_INIT_VIDEO) != 0) {
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                             "Unable to initialize SDL: %s", SDL_GetError());
                 return false;
         }
         IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF);
-        window = SDL_CreateWindow(
-                         GAME_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                         DISPLAY_W, DISPLAY_H, SDL_WINDOW_RESIZABLE);
+        window = SDL_CreateWindow(GAME_TITLE, SDL_WINDOWPOS_UNDEFINED,
+                                  SDL_WINDOWPOS_UNDEFINED, DISPLAY_W,
+                                  DISPLAY_H, SDL_WINDOW_RESIZABLE);
         if (!window) {
-                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize Window: %s", SDL_GetError());
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                             "Unable to initialize Window: %s", SDL_GetError());
                 return false;
         }
         renderer = SDL_CreateRenderer(window, -1,
                                       SDL_RENDERER_ACCELERATED |
                                       SDL_RENDERER_PRESENTVSYNC);
         if (!renderer) {
-                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize Renderer: %s", SDL_GetError());
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                             "Unable to initialize Renderer: %s",
+                             SDL_GetError());
                 return false;
         }
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");

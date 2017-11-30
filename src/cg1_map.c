@@ -29,7 +29,8 @@ bool map_init(void)
         tmx_img_load_func = (void* (*)(const char*))sdl_img_loader;
         tmx_img_free_func = (void  (*)(void*))      SDL_DestroyTexture;
         if (!(map = tmx_load(MAP_FILEPATH))) {
-                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to load tilemap: %s", tmx_strerr());
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                             "Failed to load tilemap: %s", tmx_strerr());
                 return false;
         }
         map_rect.w = map->width  * map->tile_width;
@@ -40,7 +41,9 @@ bool map_init(void)
         x_delta = DISPLAY_W - map_rect.w;
         y_delta = DISPLAY_H - map_rect.h;
         if (!(map_bmp = render_map(map))) {
-                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to render map to texture: %s", SDL_GetError());
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                             "Failed to render map to texture: %s",
+                             SDL_GetError());
                 return false;
         }
         return true;
@@ -56,16 +59,17 @@ game_screens_t map_ticker(double delta)
         return GS_MAP;
 }
 
-bool map_responder (SDL_Event *event)
+bool map_responder(SDL_Event *event)
 {
         return true;
 }
 
-void map_render (float interpolation)
+void map_render(float interpolation)
 {
 //    SDL_Log("camera: SDL_Rect {x:%i, y:%i, w:%i, h:%i}", gCamera->x, gCamera->y, gCamera->w, gCamera->h);
 //    SDL_Log("map_rect: SDL_Rect {x:%i, y:%i, w:%i, h:%i}", map_rect.x, map_rect.y, map_rect.w, map_rect.h);
-        SDL_RenderCopyEx(gRenderer, map_bmp, gCamera, NULL, 0, NULL, SDL_FLIP_NONE);
+        SDL_RenderCopyEx(gRenderer, map_bmp, gCamera,
+                         NULL, 0, NULL, SDL_FLIP_NONE);
 }
 
 // Utils to draw map
@@ -82,7 +86,9 @@ void draw_polyline(double **points, double x, double y, int pointsc)
 {
         int i;
         for (i=1; i<pointsc; i++) {
-                SDL_RenderDrawLine(gRenderer, x+points[i-1][0], y+points[i-1][1], x+points[i][0], y+points[i][1]);
+                SDL_RenderDrawLine(gRenderer,
+                                   x+points[i-1][0], y+points[i-1][1],
+                                   x+points[i][0], y+points[i][1]);
         }
 }
 
@@ -90,7 +96,11 @@ void draw_polygon(double **points, double x, double y, int pointsc)
 {
         draw_polyline(points, x, y, pointsc);
         if (pointsc > 2) {
-                SDL_RenderDrawLine(gRenderer, x+points[0][0], y+points[0][1], x+points[pointsc-1][0], y+points[pointsc-1][1]);
+                SDL_RenderDrawLine(gRenderer,
+                                   x+points[0][0],
+                                   y+points[0][1],
+                                   x+points[pointsc-1][0],
+                                   y+points[pointsc-1][1]);
         }
 }
 
@@ -109,9 +119,13 @@ void draw_objects(tmx_object_group *objgr)
                                 rect.h = head->height;
                                 SDL_RenderDrawRect(gRenderer, &rect);
                         } else if (head->obj_type  == OT_POLYGON) {
-                                draw_polygon(head->content.shape->points, head->x, head->y, head->content.shape->points_len);
+                                draw_polygon(head->content.shape->points,
+                                             head->x, head->y,
+                                             head->content.shape->points_len);
                         } else if (head->obj_type == OT_POLYLINE) {
-                                draw_polyline(head->content.shape->points, head->x, head->y, head->content.shape->points_len);
+                                draw_polyline(head->content.shape->points,
+                                              head->x, head->y,
+                                              head->content.shape->points_len);
                         } else if (head->obj_type == OT_ELLIPSE) {
                                 // TODO: FIXME: no function in SDL2 for ellipse
                                 SDL_Log("No Draw for OT_ELLIPSE");
@@ -174,7 +188,8 @@ void draw_layer(tmx_map *map, tmx_layer *layer)
                                         SDL_Log("TMX_FLIPPED_VERTICALLY");
                                         flip = SDL_FLIP_VERTICAL;
                                 }
-                                SDL_RenderCopyEx(gRenderer, tileset, &srcrect, &dstrect, 0.0, NULL, flip);
+                                SDL_RenderCopyEx(gRenderer, tileset, &srcrect,
+                                                 &dstrect, 0.0, NULL, flip);
                         }
                 }
         }
@@ -185,7 +200,8 @@ void draw_image_layer(tmx_image *img)
         SDL_Rect dim;
 
         dim.x = dim.y = 0;
-        SDL_QueryTexture((SDL_Texture*)img->resource_image, NULL, NULL, &(dim.w), &(dim.h));
+        SDL_QueryTexture((SDL_Texture*)img->resource_image, NULL, NULL,
+                         &(dim.w), &(dim.h));
         SDL_RenderCopy(gRenderer, (SDL_Texture*)img->resource_image, NULL, &dim);
 }
 
@@ -212,8 +228,12 @@ SDL_Texture* render_map(tmx_map *map)
         SDL_Texture *res;
         int w = map->width  * map->tile_width;
         int h = map->height * map->tile_height;
-        if (!(res = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, w, h))) {
-                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Error loading texture for map: %s", SDL_GetError());
+        if (!(res = SDL_CreateTexture(gRenderer,
+                                      SDL_PIXELFORMAT_RGBA8888,
+                                      SDL_TEXTUREACCESS_TARGET, w, h))) {
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                             "Error loading texture for map: %s",
+                             SDL_GetError());
                 return NULL;
         }
 

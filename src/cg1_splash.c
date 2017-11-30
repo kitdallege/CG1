@@ -10,7 +10,6 @@
 #define FADEOUT_STEP_DELAY 10
 
 
-//static SDL_Renderer *gRenderer;
 static cg1_splash_t *splash = NULL;
 
 static cg1_splash_state_t splash_state = SPLASH_HIDDEN;
@@ -27,23 +26,28 @@ const screen_state_t splash_screen = {
         .free = splash_free
 };
 
-bool splash_init()
+bool splash_init(void)
 {
         splash = malloc(sizeof *splash);
         SDL_Surface *surface = NULL;
         surface = SDL_CreateRGBSurface(0, 640, 480, 32, 0, 0, 0, 0);
         if (surface == NULL) {
-                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Error creating surface: %s\n", SDL_GetError());
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                             "Error creating surface: %s\n", SDL_GetError());
                 return false;
         }
         SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0xcc, 0xcc, 0xcc ));
         splash->texture = SDL_CreateTextureFromSurface(gRenderer, surface);
         if (SDL_SetTextureBlendMode(splash->texture, SDL_BLENDMODE_BLEND) != 0) {
-                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Error setting texture blend-mode: %s\n", SDL_GetError());
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                             "Error setting texture blend-mode: %s\n",
+                             SDL_GetError());
                 return false;
         }
         if (SDL_SetTextureAlphaMod(splash->texture, splash_alpha) != 0) {
-                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Error setting texture alpha-mode: %s\n", SDL_GetError());
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                             "Error setting texture alpha-mode: %s\n",
+                             SDL_GetError());
                 return false;
         }
         SDL_FreeSurface(surface);
@@ -54,7 +58,7 @@ bool splash_init()
 game_screens_t splash_ticker(double delta)
 {
         splash_animation_delta_sum += delta;
-        uint32_t elapsed = splash_animation_delta_sum- splash_animation_last_update;
+        uint32_t elapsed = splash_animation_delta_sum - splash_animation_last_update;
         switch (splash_state) {
         case SPLASH_HIDDEN:
                 if (elapsed > SPLASH_HIDDEN_DELAY) {
