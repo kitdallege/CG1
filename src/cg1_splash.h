@@ -7,19 +7,19 @@
 #include "cg1_game_screens.h"
 
 typedef struct cg1_splash_s {
-    SDL_Texture *texture;
-    // TODO:
-    // texture
-    // audio
+        SDL_Texture *texture;
+        // TODO:
+        // texture
+        // audio
 } cg1_splash_t;
 
 typedef enum {
-    SPLASH_HIDDEN,
-    SPLASH_FADEIN,
-    SPLASH_VISIBLE,
-    SPLASH_FADEOUT,
-    SPLASH_DONE
-} cg1_splash_state;
+        SPLASH_HIDDEN,
+        SPLASH_FADEIN,
+        SPLASH_VISIBLE,
+        SPLASH_FADEOUT,
+        SPLASH_DONE
+} cg1_splash_state_t;
 
 // TODO: Move (cg1_splash_t *splash) to module static
 // as there will only ever be one, so why thread it through a bunch of crap.

@@ -25,11 +25,11 @@ GameState
 #include "cg1_screen.h"
 
 typedef struct game_s {
-    bool (*init)(SDL_Window *window, SDL_Renderer *renderer);
-    bool (*update)(double delta);
-    bool (*handle)(SDL_Event *event);
-    void (*draw)(float interpolation);
-    void (*quit)(void);
+        bool (*init)(SDL_Window *window, SDL_Renderer *renderer);
+        bool (*update)(double delta);
+        bool (*handle)(SDL_Event *event);
+        void (*draw)(float interpolation);
+        void (*quit)(void);
 } game_t;
 
 //Public API (eg: in main)

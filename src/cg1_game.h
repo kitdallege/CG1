@@ -6,12 +6,12 @@
 #include "cg1_screen.h"
 
 typedef enum {
-    GST_QUIT,
-    GST_INITIALIZED,
-    GST_SPLASH,
-    GST_MAIN_MENU,
-    GST_MAP_DEMO,
-    GST_NUM_OF_STATES
+        GST_QUIT,
+        GST_INITIALIZED,
+        GST_SPLASH,
+        GST_MAIN_MENU,
+        GST_MAP_DEMO,
+        GST_NUM_OF_STATES
 } game_state_t;
 
 
