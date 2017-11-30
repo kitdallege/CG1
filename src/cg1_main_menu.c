@@ -16,7 +16,7 @@ const screen_state_t Main_Menu_Screen = {
     .DeInit = Main_Menu_Free
 };
 
-boolean Main_Menu_Init(void)
+bool Main_Menu_Init(void)
 {
     background = IMG_LoadTexture(gRenderer, BACKGROUND);
     if (background == NULL)
@@ -43,7 +43,7 @@ ScreenId Main_Menu_Ticker(double delta)
     }
 }
 
-boolean Main_Menu_Responder (SDL_Event *event)
+bool Main_Menu_Responder (SDL_Event *event)
 {
     return true;
 }

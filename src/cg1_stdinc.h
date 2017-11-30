@@ -2,6 +2,7 @@
 #define CG1_STDINC_H_INCLUDED
 
 #include <stdio.h>
+#include <stdbool.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
@@ -11,7 +12,6 @@
 
 #include "defines.h"
 
-typedef enum {false, true} boolean;
 typedef unsigned char byte;
 
 

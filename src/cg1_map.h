@@ -9,9 +9,9 @@
 
 const screen_state_t Map_Screen;
 
-boolean Map_Init(void);
+bool Map_Init(void);
 ScreenId Map_Ticker(double delta);
-boolean Map_Responder (SDL_Event *event);
+bool Map_Responder (SDL_Event *event);
 void Map_Render(float interpolation);
 void Map_Free(void);
 #endif // CG1_MAP_H_INCLUDED

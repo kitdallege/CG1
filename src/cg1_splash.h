@@ -27,10 +27,10 @@ typedef enum
 // as there will only ever be one, so why thread it through a bunch of crap.
 
 const screen_state_t Splash_Screen;
-boolean Splash_Init(void);
+bool Splash_Init(void);
 void Splash_Free(void);
 
 ScreenId Splash_Ticker(double delta);
-boolean Splash_Reponder(SDL_Event *event);
+bool Splash_Reponder(SDL_Event *event);
 void Splash_Render(float interpolation);
 #endif // CG1_SPLASH_H_INCLUDED

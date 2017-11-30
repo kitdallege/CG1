@@ -24,7 +24,7 @@ void* sdl_img_loader(const char *path)
     return IMG_LoadTexture(gRenderer, path);
 }
 
-boolean Map_Init(void)
+bool Map_Init(void)
 {
     tmx_img_load_func = (void* (*)(const char*))sdl_img_loader;
     tmx_img_free_func = (void  (*)(void*))      SDL_DestroyTexture;
@@ -57,7 +57,7 @@ ScreenId Map_Ticker(double delta)
     return GS_MAP;
 }
 
-boolean Map_Responder (SDL_Event *event)
+bool Map_Responder (SDL_Event *event)
 {
     return true;
 }

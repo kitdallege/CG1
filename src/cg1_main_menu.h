@@ -8,11 +8,11 @@
 
 const screen_state_t Main_Menu_Screen;
 
-boolean Main_Menu_Init();
+bool Main_Menu_Init();
 void Main_Menu_Free(void);
 
 ScreenId    Main_Menu_Ticker(double delta);
-boolean     Main_Menu_Responder (SDL_Event *event);
+bool        Main_Menu_Responder (SDL_Event *event);
 void        Main_Menu_Render(float interpolation);
 
 #endif // CG1_MAIN_MENU_H_INCLUDED

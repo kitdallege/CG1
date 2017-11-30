@@ -1,5 +1,8 @@
 #ifndef CG1_SCREEN_H_INCLUDED
 #define CG1_SCREEN_H_INCLUDED
+
+#include "cg1_stdinc.h"
+
 typedef unsigned short ScreenId;
 typedef struct screen_state_s
 {
@@ -10,9 +13,9 @@ typedef struct screen_state_s
     // to appear, do stuff, then return to whatever was going on before it
     // arrived.
     //ScreenId      previousScreenId;
-    boolean     (*Init)(void);
+    bool        (*Init)(void);
     ScreenId    (*Update) (double delta);
-    boolean     (*Handle) (SDL_Event *event);
+    bool        (*Handle) (SDL_Event *event);
     void        (*Draw) (float interpolation);
     void        (*DeInit)(void);
 } screen_state_t;

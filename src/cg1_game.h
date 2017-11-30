@@ -1,10 +1,10 @@
 #ifndef GAME_H_INCLUDED
 #define GAME_H_INCLUDED
-#include <SDL2/SDL.h>
 
 #include "cg1_stdinc.h"
 #include "cg1_globals.h"
 #include "cg1_screen.h"
+
 typedef enum
 {
     GST_QUIT,
@@ -16,9 +16,9 @@ typedef enum
 } game_state_t;
 
 
-boolean Game_Init(SDL_Window *window, SDL_Renderer *renderer);
-boolean Game_Update (double delta);
-boolean Game_Handle (SDL_Event *ev);
+bool Game_Init(SDL_Window *window, SDL_Renderer *renderer);
+bool Game_Update (double delta);
+bool Game_Handle (SDL_Event *ev);
 void Game_Draw(float interpolation);
 void Game_Quit(void);
 

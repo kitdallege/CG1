@@ -4,7 +4,7 @@
 static SDL_Renderer    *renderer = NULL;
 static SDL_Window      *window = NULL;
 
-boolean Core_Init(game_t *game)
+bool Core_Init(game_t *game)
 {
     if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_VIDEO) != 0)
     {
@@ -43,7 +43,7 @@ void Core_Run(game_t *game)
     const Uint64 count_pms = count_ps / 1000;
     double interpolation;
     SDL_Event event;
-    boolean running = true;
+    bool running = true;
     do {
         curr_count = SDL_GetPerformanceCounter();
         lag += curr_count - prev_count;

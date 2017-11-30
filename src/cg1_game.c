@@ -8,6 +8,18 @@
 #include "cg1_screen.h"
 
 #define CAMERA_STEP 2
+/*
+ * The main game is a stack of screens which are link'd by transitions.
+ * Each 'screen' itself may contain any number of sub-screens.
+ * A screen in an oo world would be a the implementation of
+ * some (Renderable, Updatable, EventHandler) type hierarchy.
+ *
+ * eg: https://gamedev.stackexchange.com/a/13475
+ * in C world its more modeled after:
+ *
+ * https://github.com/allefant/allegro/tree/master/demos/skater
+ */
+
 
 // Globals
 //static SDL_Renderer    *gRenderer = NULL;
@@ -27,7 +39,7 @@ static screen_state_t screen_stack[GS_SCREEN_COUNT];
 //    {NULL, NULL, NULL},
 //};
 
-boolean Game_Init(SDL_Window *window, SDL_Renderer *renderer)
+bool Game_Init(SDL_Window *window, SDL_Renderer *renderer)
 {
     // set 'game' globals before bring in the various modules which use them.
     gWindow = window;
@@ -50,7 +62,7 @@ boolean Game_Init(SDL_Window *window, SDL_Renderer *renderer)
     return true;
 }
 
-boolean Game_Update (double delta)
+bool Game_Update (double delta)
 {
     // update based on time thats passed
     next_screen = screen_stack[current_screen].Update(delta);
@@ -78,7 +90,7 @@ boolean Game_Update (double delta)
     return true;
 }
 
-boolean Game_Handle( SDL_Event *event)
+bool Game_Handle( SDL_Event *event)
 {
     switch (event->type)
     {

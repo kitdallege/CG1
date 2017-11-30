@@ -5,7 +5,7 @@
 SDL_Texture *cursor = NULL;
 static SDL_Rect *position = NULL;
 
-boolean Mouse_Init()
+bool Mouse_Init()
 {
     cursor = IMG_LoadTexture(gRenderer, CURSOR_TEXTURE);
     if (cursor == NULL)
@@ -27,7 +27,7 @@ void Mouse_Free(void)
 
 }
 
-boolean Mouse_Ticker(double delta)
+bool Mouse_Ticker(double delta)
 {
     if (position == NULL)
     {
@@ -39,7 +39,7 @@ boolean Mouse_Ticker(double delta)
     return true;
 }
 
-boolean Mouse_Reponder(SDL_Event *event)
+bool Mouse_Reponder(SDL_Event *event)
 {
     switch (event->type)
     {

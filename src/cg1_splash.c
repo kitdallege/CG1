@@ -28,7 +28,7 @@ const screen_state_t Splash_Screen = {
     .DeInit = NULL
 };
 
-boolean Splash_Init()
+bool Splash_Init()
 {
     splash = malloc(sizeof *splash);
     SDL_Surface *surface = NULL;
@@ -120,7 +120,7 @@ ScreenId Splash_Ticker(double delta)
 
 }
 
-boolean Splash_Reponder(SDL_Event *event)
+bool Splash_Reponder(SDL_Event *event)
 {
     return true; // eat all events processing none.
 }
