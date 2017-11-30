@@ -11,20 +11,20 @@
 int main(int argc, char *argv[])
 {
     game_t *game = malloc(sizeof(game_t));
-    game->Init      = Game_Init;
-    game->Update    = Game_Update;
-    game->Handle    = Game_Handle;
-    game->Draw      = Game_Draw;
-    game->Quit      = Game_Quit;
+    game->init      = game_init;
+    game->update    = game_update;
+    game->handle    = game_handle;
+    game->draw      = game_draw;
+    game->quit      = game_quit;
 
-    if (!Core_Init(game)){
+    if (!core_init(game)) {
         goto errorQuit;
     }
-    Core_Run(game);
-    Core_Quit(game);
+    core_run(game);
+    core_quit(game);
     return 0;
 
 errorQuit:
-    Core_Quit(game);
+    core_quit(game);
     return -1;
 }

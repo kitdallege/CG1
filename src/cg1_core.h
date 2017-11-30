@@ -18,26 +18,23 @@ I picture a bunch of state machines. All hierarchical in nature.
 GameState
 */
 
-// TODO: Remove dep on stdinc, creating our own, and if anything
-// pulling in into that one.
 #include <stdio.h>
 #include <stdbool.h>
 
 #include <SDL2/SDL.h>
 #include "cg1_screen.h"
 
-typedef struct game_s
-{
-    bool (*Init)(SDL_Window *window, SDL_Renderer *renderer);
-    bool (*Update)(double delta);
-    bool (*Handle)(SDL_Event *event);
-    void    (*Draw)(float interpolation);
-    void    (*Quit)(void);
+typedef struct game_s {
+    bool (*init)(SDL_Window *window, SDL_Renderer *renderer);
+    bool (*update)(double delta);
+    bool (*handle)(SDL_Event *event);
+    void (*draw)(float interpolation);
+    void (*quit)(void);
 } game_t;
 
 //Public API (eg: in main)
-bool Core_Init(game_t *game);
-void Core_Run(game_t *game);
-void Core_Quit(game_t *game);
+bool core_init(game_t *game);
+void core_run(game_t *game);
+void core_quit(game_t *game);
 
 #endif // CG1_CORE_H_INCLUDED

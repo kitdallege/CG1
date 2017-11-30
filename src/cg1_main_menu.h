@@ -6,13 +6,13 @@
 #include "cg1_game_screens.h"
 #include "cg1_globals.h"
 
-const screen_state_t Main_Menu_Screen;
+const screen_state_t main_menu_screen;
 
-bool Main_Menu_Init();
-void Main_Menu_Free(void);
+bool main_menu_init();
+void main_menu_free(void);
 
-ScreenId    Main_Menu_Ticker(double delta);
-bool        Main_Menu_Responder (SDL_Event *event);
-void        Main_Menu_Render(float interpolation);
+game_screens_t    main_menu_ticker(double delta);
+bool        main_menu_responder (SDL_Event *event);
+void        main_menu_render(float interpolation);
 
 #endif // CG1_MAIN_MENU_H_INCLUDED

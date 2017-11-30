@@ -9,13 +9,13 @@ static int x_delta, y_delta;
 
 SDL_Texture* render_map(tmx_map *map);
 
-const screen_state_t Map_Screen = {
-    .screenId = GS_MAP,
-    .Init = Map_Init,
-    .Update = Map_Ticker,
-    .Handle = Map_Responder,
-    .Draw = Map_Render,
-    .DeInit = Map_Free
+const screen_state_t map_screen = {
+    .screen_id = GS_MAP,
+    .init = map_init,
+    .update = map_ticker,
+    .handle = map_responder,
+    .draw = map_render,
+    .free = map_free
 };
 
 
@@ -24,12 +24,11 @@ void* sdl_img_loader(const char *path)
     return IMG_LoadTexture(gRenderer, path);
 }
 
-bool Map_Init(void)
+bool map_init(void)
 {
     tmx_img_load_func = (void* (*)(const char*))sdl_img_loader;
     tmx_img_free_func = (void  (*)(void*))      SDL_DestroyTexture;
-    if (!(map = tmx_load(MAP_FILEPATH)))
-    {
+    if (!(map = tmx_load(MAP_FILEPATH))) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to load tilemap: %s", tmx_strerr());
         return false;
     }
@@ -47,22 +46,22 @@ bool Map_Init(void)
     return true;
 }
 
-void Map_Free(void)
+void map_free(void)
 {
     tmx_map_free(map);
 }
 
-ScreenId Map_Ticker(double delta)
+game_screens_t map_ticker(double delta)
 {
     return GS_MAP;
 }
 
-bool Map_Responder (SDL_Event *event)
+bool map_responder (SDL_Event *event)
 {
     return true;
 }
 
-void Map_Render (float interpolation)
+void map_render (float interpolation)
 {
 //    SDL_Log("camera: SDL_Rect {x:%i, y:%i, w:%i, h:%i}", gCamera->x, gCamera->y, gCamera->w, gCamera->h);
 //    SDL_Log("map_rect: SDL_Rect {x:%i, y:%i, w:%i, h:%i}", map_rect.x, map_rect.y, map_rect.w, map_rect.h);
@@ -158,24 +157,20 @@ void draw_layer(tmx_map *map, tmx_layer *layer)
                 } else {
                     tileset = (SDL_Texture*)ts->image->resource_image;
                 }
-                if (op < 1.0f)
-                {
+                if (op < 1.0f) {
                     SDL_Log("opacity: %.2f", op);
                 }
                 // diagonal -> horizontal -> vertical
-                if (rawGid & TMX_FLIPPED_DIAGONALLY)
-                {
+                if (rawGid & TMX_FLIPPED_DIAGONALLY) {
                     SDL_Log("TMX_FLIPPED_DIAGONALLY");
                     flip = SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL;
 
                 }
-                if (rawGid & TMX_FLIPPED_HORIZONTALLY)
-                {
+                if (rawGid & TMX_FLIPPED_HORIZONTALLY) {
                     SDL_Log("TMX_FLIPPED_HORIZONTALLY");
                     flip = SDL_FLIP_HORIZONTAL;
                 }
-                if (rawGid & TMX_FLIPPED_VERTICALLY)
-                {
+                if (rawGid & TMX_FLIPPED_VERTICALLY) {
                     SDL_Log("TMX_FLIPPED_VERTICALLY");
                     flip = SDL_FLIP_VERTICAL;
                 }

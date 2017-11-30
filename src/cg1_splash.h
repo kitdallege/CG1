@@ -6,16 +6,14 @@
 #include "cg1_screen.h"
 #include "cg1_game_screens.h"
 
-typedef struct cg1_splash_s
-{
+typedef struct cg1_splash_s {
     SDL_Texture *texture;
     // TODO:
     // texture
     // audio
 } cg1_splash_t;
 
-typedef enum
-{
+typedef enum {
     SPLASH_HIDDEN,
     SPLASH_FADEIN,
     SPLASH_VISIBLE,
@@ -26,11 +24,11 @@ typedef enum
 // TODO: Move (cg1_splash_t *splash) to module static
 // as there will only ever be one, so why thread it through a bunch of crap.
 
-const screen_state_t Splash_Screen;
-bool Splash_Init(void);
-void Splash_Free(void);
+const screen_state_t splash_screen;
+bool splash_init(void);
+void splash_free(void);
 
-ScreenId Splash_Ticker(double delta);
-bool Splash_Reponder(SDL_Event *event);
-void Splash_Render(float interpolation);
+game_screens_t splash_ticker(double delta);
+bool splash_reponder(SDL_Event *event);
+void splash_render(float interpolation);
 #endif // CG1_SPLASH_H_INCLUDED

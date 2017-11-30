@@ -44,23 +44,38 @@
 			<Add library="/usr/lib/x86_64-linux-gnu/libxml2.so" />
 			<Add directory="/usr/local/lib" />
 		</Linker>
+		<Unit filename="src/cg1_core.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/cg1_core.h" />
 		<Unit filename="src/cg1_game.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/cg1_game.h" />
+		<Unit filename="src/cg1_game_screens.h" />
+		<Unit filename="src/cg1_globals.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/cg1_globals.h" />
 		<Unit filename="src/cg1_main_menu.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/cg1_main_menu.h" />
+		<Unit filename="src/cg1_map.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/cg1_map.h" />
 		<Unit filename="src/cg1_mouse.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/cg1_mouse.h" />
+		<Unit filename="src/cg1_screen.h" />
 		<Unit filename="src/cg1_splash.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/cg1_splash.h" />
 		<Unit filename="src/cg1_stdinc.h" />
+		<Unit filename="src/cg1_transition.h" />
 		<Unit filename="src/defines.h" />
 		<Unit filename="src/main.c">
 			<Option compilerVar="CC" />

@@ -5,11 +5,10 @@
 SDL_Texture *cursor = NULL;
 static SDL_Rect *position = NULL;
 
-bool Mouse_Init()
+bool mouse_init()
 {
     cursor = IMG_LoadTexture(gRenderer, CURSOR_TEXTURE);
-    if (cursor == NULL)
-    {
+    if (cursor == NULL) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Error loading cursor texture: %s\n", SDL_GetError());
         return false;
     }
@@ -21,16 +20,15 @@ bool Mouse_Init()
     return true;
 }
 
-void Mouse_Free(void)
+void mouse_free(void)
 {
     SDL_DestroyTexture(cursor);
 
 }
 
-bool Mouse_Ticker(double delta)
+bool mouse_ticker(double delta)
 {
-    if (position == NULL)
-    {
+    if (position == NULL) {
         int x,y;
         SDL_GetMouseState(&x, &y);
         position->x = x;
@@ -39,28 +37,26 @@ bool Mouse_Ticker(double delta)
     return true;
 }
 
-bool Mouse_Reponder(SDL_Event *event)
+bool mouse_reponder(SDL_Event *event)
 {
-    switch (event->type)
-    {
-        case SDL_MOUSEMOTION:
-        case SDL_MOUSEBUTTONDOWN:
-        case SDL_MOUSEBUTTONUP:
-        case SDL_MOUSEWHEEL:
-            {
-                int x,y;
-                SDL_GetMouseState(&x, &y);
-                position->x = x;
-                position->y = y;
-                break;
-            }
-        default:
-            break;
+    switch (event->type) {
+    case SDL_MOUSEMOTION:
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+    case SDL_MOUSEWHEEL: {
+        int x,y;
+        SDL_GetMouseState(&x, &y);
+        position->x = x;
+        position->y = y;
+        break;
+    }
+    default:
+        break;
     }
     return true;
 }
 
-void Mouse_Render()
+void mouse_render()
 {
     SDL_RenderCopy(gRenderer, cursor, NULL, position);
 }

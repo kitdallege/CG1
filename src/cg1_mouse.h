@@ -4,10 +4,10 @@
 #include "cg1_stdinc.h"
 #include "cg1_globals.h"
 
-bool Mouse_Init();
-bool Mouse_Ticker(double delta);
-bool Mouse_Reponder(SDL_Event *event);
-void Mouse_Render();
-void Mouse_Free(void);
+bool mouse_init();
+bool mouse_ticker(double delta);
+bool mouse_reponder(SDL_Event *event);
+void mouse_render();
+void mouse_free(void);
 
 #endif // CG1_MOUSE_H_INCLUDED
